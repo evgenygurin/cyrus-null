@@ -47,6 +47,16 @@ export {
 	SubscriptionError,
 	ValidationError,
 } from "./errors/CyrusError.js";
+// Infrastructure - HTTP Client
+export type {
+	IHttpClient,
+	RequestConfig,
+} from "./infrastructure/http/index.js";
+export {
+	FetchHttpClient,
+	type FetchHttpClientConfig,
+	HttpError,
+} from "./infrastructure/http/index.js";
 export type {
 	SerializableEdgeWorkerState,
 	SerializedCyrusAgentSession,
