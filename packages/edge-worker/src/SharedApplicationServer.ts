@@ -61,6 +61,7 @@ export class SharedApplicationServer {
 	private isListening = false;
 	private ngrokListener: any = null;
 	private ngrokAuthToken: string | null = null;
+	private ngrokDomain: string | null = null;
 	private ngrokUrl: string | null = null;
 	private proxyUrl: string;
 
@@ -69,10 +70,12 @@ export class SharedApplicationServer {
 		host: string = "localhost",
 		ngrokAuthToken?: string,
 		proxyUrl?: string,
+		ngrokDomain?: string,
 	) {
 		this.port = port;
 		this.host = host;
 		this.ngrokAuthToken = ngrokAuthToken || null;
+		this.ngrokDomain = ngrokDomain || null;
 		this.proxyUrl = proxyUrl || process.env.PROXY_URL || DEFAULT_PROXY_URL;
 	}
 
@@ -180,10 +183,20 @@ export class SharedApplicationServer {
 
 		try {
 			console.log("🔗 Starting ngrok tunnel...");
-			this.ngrokListener = await forward({
+
+			// Configure ngrok options
+			const ngrokOptions: any = {
 				addr: this.port,
 				authtoken: this.ngrokAuthToken,
-			});
+			};
+
+			// Use static domain if configured
+			if (this.ngrokDomain) {
+				ngrokOptions.domain = this.ngrokDomain;
+				console.log(`🔗 Using static ngrok domain: ${this.ngrokDomain}`);
+			}
+
+			this.ngrokListener = await forward(ngrokOptions);
 
 			this.ngrokUrl = this.ngrokListener.url();
 			console.log(`🌐 Ngrok tunnel active: ${this.ngrokUrl}`);

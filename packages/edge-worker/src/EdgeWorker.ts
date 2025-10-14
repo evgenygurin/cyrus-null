@@ -130,6 +130,7 @@ export class EdgeWorker extends EventEmitter {
 			serverHost,
 			config.ngrokAuthToken,
 			config.proxyUrl,
+			config.ngrokDomain,
 		);
 
 		// Register OAuth callback handler if provided
