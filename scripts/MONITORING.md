@@ -33,12 +33,14 @@
 ```
 
 **Формат**: Красиво отформатированный markdown с:
+
 - Timestamp каждого действия
 - Команды, которые выполняет Claude
 - Результаты tool calls
 - Thinking процесс агента
 
 **Пример**:
+
 ```markdown
 ## 04:52:17 - Claude Response
 I'll analyze this Linear issue...
@@ -57,6 +59,7 @@ I'll analyze this Linear issue...
 **Формат**: NDJSON (newline-delimited JSON) - каждая строка = отдельное событие
 
 **Парсинг**:
+
 ```bash
 # Показать все tool calls
 cat /Users/laptop/.cyrus/logs/CCB-208/session-*.jsonl | jq 'select(.type == "tool_use")'
@@ -75,6 +78,7 @@ cat /Users/laptop/.cyrus/logs/CCB-208/session-*.jsonl | jq '.usage' | jq -s 'add
 ```
 
 **Формат**: Прямой вывод Cyrus процесса с:
+
 - Webhook events
 - Session creation
 - EdgeWorker actions
