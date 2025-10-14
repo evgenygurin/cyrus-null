@@ -47,8 +47,8 @@ describe("ConfigService", () => {
 		expect(loaded).toEqual(testConfig);
 	});
 
-	it("should throw error for invalid config", async () => {
-		await expect(configService.validate({ invalid: true })).rejects.toThrow(
+	it("should throw error for invalid config", () => {
+		expect(() => configService.validate({ invalid: true })).toThrow(
 			"Invalid configuration",
 		);
 	});
