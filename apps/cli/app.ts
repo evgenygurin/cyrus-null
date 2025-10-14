@@ -492,6 +492,7 @@ class EdgeApp {
 		}
 
 		// Create EdgeWorker configuration
+		const edgeConfig = this.loadEdgeConfig();
 		const config: EdgeWorkerConfig = {
 			proxyUrl,
 			repositories,
@@ -502,17 +503,17 @@ class EdgeApp {
 				process.env.DISALLOWED_TOOLS?.split(",").map((t) => t.trim()) ||
 				undefined,
 			// Model configuration: environment variables take precedence over config file
-			defaultModel:
-				process.env.CYRUS_DEFAULT_MODEL || this.loadEdgeConfig().defaultModel,
+			defaultModel: process.env.CYRUS_DEFAULT_MODEL || edgeConfig.defaultModel,
 			defaultFallbackModel:
 				process.env.CYRUS_DEFAULT_FALLBACK_MODEL ||
-				this.loadEdgeConfig().defaultFallbackModel,
+				edgeConfig.defaultFallbackModel,
 			webhookBaseUrl: process.env.CYRUS_BASE_URL,
 			serverPort: process.env.CYRUS_SERVER_PORT
 				? parseInt(process.env.CYRUS_SERVER_PORT, 10)
 				: 3456,
 			serverHost: isExternalHost ? "0.0.0.0" : "localhost",
 			ngrokAuthToken,
+			ngrokDomain: edgeConfig.ngrokDomain,
 			features: {
 				enableContinuation: true,
 			},
@@ -536,64 +537,102 @@ class EdgeApp {
 
 					// Handle OAuth completion for repository setup
 					if (this.edgeWorker) {
-						console.log(
-							"\n📋 Setting up new repository for workspace:",
-							workspaceName,
-						);
-						console.log("─".repeat(50));
-
 						try {
-							const newRepo =
-								await this.setupRepositoryWizard(linearCredentials);
-
-							// Add to existing repositories
+							// Load current config
 							const edgeConfig = this.loadEdgeConfig();
-							console.log(
-								`📊 Current config has ${
-									edgeConfig.repositories?.length || 0
-								} repositories`,
-							);
-							edgeConfig.repositories = [
-								...(edgeConfig.repositories || []),
-								newRepo,
-							];
-							console.log(
-								`📊 Adding repository "${newRepo.name}", new total: ${edgeConfig.repositories.length}`,
-							);
-							this.saveEdgeConfig(edgeConfig);
-							console.log("\n✅ Repository configured successfully!");
-							console.log(
-								"📝 ~/.cyrus/config.json file has been updated with your new repository configuration.",
-							);
-							console.log(
-								"💡 You can edit this file and restart Cyrus at any time to modify settings.",
-							);
-							console.log(
-								"📖 Configuration docs: https://github.com/ceedaragents/cyrus#configuration",
+
+							// Check if repository already exists for this workspace
+							const existingRepo = edgeConfig.repositories?.find(
+								(repo) => repo.linearWorkspaceId === workspaceId,
 							);
 
-							// Restart edge worker with new config
-							await this.edgeWorker!.stop();
-							this.edgeWorker = null;
+							if (existingRepo) {
+								// Repository exists - just update the OAuth token
+								console.log(
+									`\n🔐 Updating OAuth token for existing repository: ${existingRepo.name}`,
+								);
+								existingRepo.linearToken = token;
+								this.saveEdgeConfig(edgeConfig);
+								console.log("✅ OAuth token updated successfully!");
 
-							// Give a small delay to ensure file is written
-							await new Promise((resolve) => setTimeout(resolve, 100));
+								// Restart edge worker with updated config
+								await this.edgeWorker!.stop();
+								this.edgeWorker = null;
 
-							// Reload configuration and restart worker without going through setup
-							const updatedConfig = this.loadEdgeConfig();
-							console.log(
-								`\n🔄 Reloading with ${
-									updatedConfig.repositories?.length || 0
-								} repositories from config file`,
-							);
+								// Give a small delay to ensure file is written
+								await new Promise((resolve) => setTimeout(resolve, 100));
 
-							return this.startEdgeWorker({
-								proxyUrl,
-								repositories: updatedConfig.repositories || [],
-							});
+								// Reload configuration and restart worker
+								const updatedConfig = this.loadEdgeConfig();
+								console.log(
+									`\n🔄 Reloading with ${
+										updatedConfig.repositories?.length || 0
+									} repositories from config file`,
+								);
+
+								return this.startEdgeWorker({
+									proxyUrl,
+									repositories: updatedConfig.repositories || [],
+								});
+							} else {
+								// No existing repository - run interactive setup
+								console.log(
+									"\n📋 Setting up new repository for workspace:",
+									workspaceName,
+								);
+								console.log("─".repeat(50));
+
+								const newRepo =
+									await this.setupRepositoryWizard(linearCredentials);
+
+								// Add to existing repositories
+								console.log(
+									`📊 Current config has ${
+										edgeConfig.repositories?.length || 0
+									} repositories`,
+								);
+								edgeConfig.repositories = [
+									...(edgeConfig.repositories || []),
+									newRepo,
+								];
+								console.log(
+									`📊 Adding repository "${newRepo.name}", new total: ${edgeConfig.repositories.length}`,
+								);
+								this.saveEdgeConfig(edgeConfig);
+								console.log("\n✅ Repository configured successfully!");
+								console.log(
+									"📝 ~/.cyrus/config.json file has been updated with your new repository configuration.",
+								);
+								console.log(
+									"💡 You can edit this file and restart Cyrus at any time to modify settings.",
+								);
+								console.log(
+									"📖 Configuration docs: https://github.com/ceedaragents/cyrus#configuration",
+								);
+
+								// Restart edge worker with new config
+								await this.edgeWorker!.stop();
+								this.edgeWorker = null;
+
+								// Give a small delay to ensure file is written
+								await new Promise((resolve) => setTimeout(resolve, 100));
+
+								// Reload configuration and restart worker without going through setup
+								const updatedConfig = this.loadEdgeConfig();
+								console.log(
+									`\n🔄 Reloading with ${
+										updatedConfig.repositories?.length || 0
+									} repositories from config file`,
+								);
+
+								return this.startEdgeWorker({
+									proxyUrl,
+									repositories: updatedConfig.repositories || [],
+								});
+							}
 						} catch (error) {
 							console.error(
-								"\n❌ Repository setup failed:",
+								"\n❌ OAuth callback failed:",
 								(error as Error).message,
 							);
 						}
