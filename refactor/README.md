@@ -40,6 +40,22 @@
    - Брифинг для команды (на основе гибридной архитектуры)
    - Timeline и action items
 
+#### Стратегический контекст
+
+6. **[WHY_CUSTOM_ORCHESTRATOR.md](./WHY_CUSTOM_ORCHESTRATOR.md)**
+   - Ответ на вопрос: "Зачем свой оркестратор, если есть готовые решения?"
+   - Бизнес-кейс для разработки Cyrus
+   - Автономность и проактивность (24/7 агент)
+   - Multi-tenant SaaS архитектура для коммерциализации
+   - White-label возможности
+
+7. **[ORCHESTRATOR_CODEGEN_ALIGNMENT.md](./ORCHESTRATOR_CODEGEN_ALIGNMENT.md)** ⚙️
+   - Технический анализ текущего orchestrator prompt
+   - Какие изменения нужны для Codegen integration
+   - Спецификация 5 новых MCP tools для Codegen
+   - Обновлённый execution workflow
+   - Implementation plan (3-4 недели)
+
 ---
 
 ## 🎯 Ключевая идея Codegen Integration
@@ -142,6 +158,8 @@ Claude Code = Local Executor (для лёгких задач и планиров
 | Документ | Статус | Дата обновления |
 |----------|--------|-----------------|
 | **CODEGEN_ONLY_ARCHITECTURE.md** | ✅ **Recommended** | 2025-01-08 |
+| WHY_CUSTOM_ORCHESTRATOR.md | ✅ Strategic Vision | 2025-01-08 |
+| **ORCHESTRATOR_CODEGEN_ALIGNMENT.md** | ✅ **Technical Analysis** | 2025-01-08 |
 | CODEGEN_INTEGRATION_SUMMARY.md | ✅ Alternative (Hybrid) | 2025-01-08 |
 | CODEGEN_INTEGRATION_PLAN.md | ✅ Alternative (Hybrid) | 2025-01-08 |
 | CODEGEN_ARCHITECTURE_DIAGRAMS.md | ✅ Ready for Review | 2025-01-08 |
