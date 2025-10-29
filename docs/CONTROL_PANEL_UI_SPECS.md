@@ -1,6 +1,7 @@
 # Cyrus Control Panel - UI/UX Specifications
 
 ## Оглавление
+
 - [Design Principles](#design-principles)
 - [Layout Specifications](#layout-specifications)
 - [Page Wireframes](#page-wireframes)
@@ -15,21 +16,25 @@
 ## Design Principles
 
 ### 1. Clarity First
+
 - **Information Hierarchy** - Важная информация должна быть заметной
 - **Visual Weight** - Использовать размер, цвет, и позиционирование для направления внимания
 - **Minimal Cognitive Load** - Не перегружать пользователя информацией
 
 ### 2. Consistent & Predictable
+
 - **Design System** - Единый язык дизайна по всему приложению
 - **Patterns** - Повторяющиеся паттерны взаимодействия
 - **Expectations** - Элементы ведут себя ожидаемо
 
 ### 3. Performance-Oriented
+
 - **Fast Load** - Skeleton screens, progressive loading
 - **Real-time Feel** - Optimistic updates, instant feedback
 - **Smooth Animations** - 60fps, hardware-accelerated
 
 ### 4. Accessible by Default
+
 - **WCAG 2.1 Level AA** - Соответствие стандартам
 - **Keyboard Navigation** - Полная поддержка клавиатуры
 - **Screen Readers** - Semantic HTML, ARIA labels
@@ -570,6 +575,7 @@ const layout = {
 ### Core Components (shadcn/ui based)
 
 #### 1. Button
+
 ```typescript
 // Variants
 <Button variant="default">Default</Button>
@@ -590,6 +596,7 @@ const layout = {
 ```
 
 #### 2. Card
+
 ```typescript
 <Card>
   <CardHeader>
@@ -606,6 +613,7 @@ const layout = {
 ```
 
 #### 3. Badge
+
 ```typescript
 // Status badges
 <Badge variant="default">Default</Badge>
@@ -622,6 +630,7 @@ const layout = {
 ```
 
 #### 4. Dialog / Modal
+
 ```typescript
 <Dialog open={open} onOpenChange={setOpen}>
   <DialogTrigger asChild>
@@ -650,6 +659,7 @@ const layout = {
 ### Custom Components
 
 #### 5. SessionCard
+
 ```typescript
 interface SessionCardProps {
   session: Session
@@ -676,6 +686,7 @@ interface SessionCardProps {
 ```
 
 #### 6. MetricCard
+
 ```typescript
 interface MetricCardProps {
   label: string
@@ -695,6 +706,7 @@ interface MetricCardProps {
 ```
 
 #### 7. StatusIndicator
+
 ```typescript
 interface StatusIndicatorProps {
   status: 'online' | 'offline' | 'error'
@@ -710,6 +722,7 @@ interface StatusIndicatorProps {
 ```
 
 #### 8. CodeBlock
+
 ```typescript
 interface CodeBlockProps {
   code: string
@@ -729,6 +742,7 @@ interface CodeBlockProps {
 ```
 
 #### 9. Timeline
+
 ```typescript
 interface TimelineProps {
   events: TimelineEvent[]
@@ -757,6 +771,7 @@ interface TimelineEvent {
 ```
 
 #### 10. CommandPalette
+
 ```typescript
 // Global command palette (⌘K)
 <CommandDialog open={open} onOpenChange={setOpen}>

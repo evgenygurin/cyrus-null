@@ -86,10 +86,34 @@ export class OAuthService {
 			// Exchange code for token
 			const tokenResponse = await this.exchangeCodeForToken(code);
 
-			// Get workspace info from token
-			const workspaceInfo = await this.getWorkspaceInfo(
-				tokenResponse.access_token,
-			);
+			// Try to get workspace info from token (optional - may fail for app tokens)
+			let workspaceInfo: any = null;
+			let workspaceId = "unknown";
+
+			try {
+				workspaceInfo = await this.getWorkspaceInfo(tokenResponse.access_token);
+				workspaceId = workspaceInfo.organization.id;
+				console.log(
+					`[OAuthService] Successfully fetched workspace info for ${workspaceInfo.userEmail}`,
+				);
+			} catch (error) {
+				console.warn(
+					`[OAuthService] Failed to fetch workspace info (app token may not have GraphQL access): ${(error as Error).message}`,
+				);
+				console.log(
+					`[OAuthService] Continuing without workspace info - token will still work for webhooks`,
+				);
+				// Use default placeholder values
+				workspaceInfo = {
+					userId: "app-token",
+					userEmail: "app@cyrus.ai",
+					organization: {
+						id: "unknown",
+						name: "Unknown Workspace",
+						urlKey: "unknown",
+					},
+				};
+			}
 
 			// Create token object
 			const token: OAuthToken = {
@@ -105,10 +129,12 @@ export class OAuthService {
 			};
 
 			// Store token in KV
-			await this.tokenStorage.saveToken(workspaceInfo.organization.id, token);
+			await this.tokenStorage.saveToken(workspaceId, token);
 
-			// Store workspace metadata
-			await this.storeWorkspaceMetadata(workspaceInfo);
+			// Store workspace metadata if available
+			if (workspaceId !== "unknown") {
+				await this.storeWorkspaceMetadata(workspaceInfo);
+			}
 
 			// Call success handler if provided
 			if (this.onAuthSuccess) {
@@ -210,6 +236,13 @@ export class OAuthService {
 	 * Exchange authorization code for access token
 	 */
 	private async exchangeCodeForToken(code: string): Promise<any> {
+		console.log(`[OAuthService] Exchanging authorization code for token...`);
+		console.log(`[OAuthService] Code: ${code.slice(0, 20)}...`);
+		console.log(
+			`[OAuthService] Client ID: ${this.env.LINEAR_CLIENT_ID.slice(0, 10)}...`,
+		);
+		console.log(`[OAuthService] Redirect URI: ${this.env.OAUTH_REDIRECT_URI}`);
+
 		const response = await fetch("https://api.linear.app/oauth/token", {
 			method: "POST",
 			headers: {
@@ -226,16 +259,29 @@ export class OAuthService {
 
 		if (!response.ok) {
 			const error = await response.text();
+			console.error(`[OAuthService] Token exchange failed:`, error);
 			throw new Error(`Token exchange failed: ${error}`);
 		}
 
-		return await response.json();
+		const tokenData = (await response.json()) as any;
+		console.log(`[OAuthService] Token exchange successful!`);
+		console.log(
+			`[OAuthService] Access token: ${tokenData.access_token?.slice(0, 20)}...`,
+		);
+		console.log(`[OAuthService] Token type: ${tokenData.token_type}`);
+		console.log(`[OAuthService] Scope: ${tokenData.scope}`);
+
+		return tokenData;
 	}
 
 	/**
 	 * Get workspace information using access token
 	 */
 	private async getWorkspaceInfo(accessToken: string): Promise<any> {
+		console.log(
+			`[OAuthService] Fetching workspace info with token: ${accessToken.slice(0, 20)}...`,
+		);
+
 		const response = await fetch("https://api.linear.app/graphql", {
 			method: "POST",
 			headers: {
@@ -253,13 +299,6 @@ export class OAuthService {
                 id
                 name
                 urlKey
-                teams {
-                  nodes {
-                    id
-                    key
-                    name
-                  }
-                }
               }
             }
           }
@@ -268,14 +307,26 @@ export class OAuthService {
 		});
 
 		if (!response.ok) {
-			throw new Error("Failed to get workspace info");
+			const errorText = await response.text();
+			console.error(
+				`[OAuthService] Linear API error: ${response.status} ${response.statusText}`,
+			);
+			console.error(`[OAuthService] Response body: ${errorText}`);
+			throw new Error(
+				`Failed to get workspace info: ${response.status} ${errorText.slice(0, 200)}`,
+			);
 		}
 
 		const data = (await response.json()) as any;
 
 		if (data.errors) {
+			console.error(`[OAuthService] GraphQL errors:`, data.errors);
 			throw new Error(`GraphQL errors: ${JSON.stringify(data.errors)}`);
 		}
+
+		console.log(
+			`[OAuthService] Successfully fetched workspace info for user ${data.data.viewer.email}`,
+		);
 
 		return {
 			userId: data.data.viewer.id,

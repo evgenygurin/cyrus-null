@@ -1,0 +1,37 @@
+{
+	"name": "@cyrus/apollo-server",
+	"version": "1.0.0",
+	"description": "Apollo GraphQL Server for Cyrus with Linear Connectors",
+	"type": "module",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"scripts": {
+		"build": "tsc",
+		"dev": "tsx watch src/index.ts",
+		"start": "node dist/index.js",
+		"typecheck": "tsc --noEmit",
+		"test": "vitest"
+	},
+	"dependencies": {
+		"@apollo/server": "^4.11.0",
+		"@apollo/server-plugin-landing-page-graphql-playground": "^4.0.1",
+		"@linear/sdk": "60.0.0",
+		"graphql": "^16.9.0",
+		"graphql-tag": "^2.12.6"
+	},
+	"devDependencies": {
+		"@types/node": "^20.14.9",
+		"tsx": "^4.7.1",
+		"typescript": "^5.3.3",
+		"vitest": "^1.1.0"
+	},
+	"keywords": [
+		"apollo",
+		"graphql",
+		"linear",
+		"connectors"
+	],
+	"author": "Ceedar",
+	"license": "MIT",
+	"packageManager": "pnpm@10.13.1"
+}

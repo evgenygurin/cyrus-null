@@ -1,0 +1,83 @@
+# Linear GraphQL Schema
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  displayName: String!
+  avatarUrl: String
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Team {
+  id: ID!
+  name: String!
+  key: String!
+  description: String
+}
+
+type WorkflowState {
+  id: ID!
+  name: String!
+  type: String!
+}
+
+type Project {
+  id: ID!
+  name: String!
+}
+
+type IssueLabel {
+  id: ID!
+  name: String!
+  color: String!
+}
+
+type Issue {
+  id: ID!
+  identifier: String!
+  title: String!
+  description: String
+  state: WorkflowState
+  priority: Float
+  priorityLabel: String!
+  assignee: User
+  team: Team
+  project: Project
+  labels: [IssueLabel!]
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Comment {
+  id: ID!
+  body: String!
+  user: User!
+  issue: Issue!
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Query {
+  me: User
+  myIssues(first: Int, includeArchived: Boolean): [Issue!]
+  issue(id: ID!): Issue
+  teams(first: Int): [Team!]
+  issueComments(issueId: ID!, first: Int): [Comment!]
+}
+
+input CreateIssueInput {
+  title: String!
+  description: String
+  teamId: ID!
+  assigneeId: ID
+  priority: Int
+  projectId: ID
+}
+
+type Mutation {
+  createIssue(input: CreateIssueInput!): Issue
+  addComment(issueId: ID!, body: String!): Comment
+  updateIssueState(issueId: ID!, stateId: ID!): Issue
+}

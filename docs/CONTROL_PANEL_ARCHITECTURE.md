@@ -1,6 +1,7 @@
 # Cyrus Control Panel - Architecture & Design
 
 ## Оглавление
+
 - [Обзор](#обзор)
 - [Архитектура решения](#архитектура-решения)
 - [Технический стек](#технический-стек)
@@ -16,6 +17,7 @@
 ## Обзор
 
 **Cyrus Control Panel** - это современная веб-панель управления для Cyrus AI Agent, предоставляющая централизованный интерфейс для:
+
 - Мониторинга активных сессий Claude
 - Управления репозиториями и Linear workspace
 - Просмотра истории и аналитики работы агента
@@ -23,6 +25,7 @@
 - Управления подпиской и биллингом
 
 ### Целевая аудитория
+
 - DevOps инженеры, настраивающие Cyrus для команд
 - Разработчики, использующие Cyrus для автоматизации
 - Менеджеры проектов, мониторящие прогресс задач
@@ -223,6 +226,7 @@ Control Panel App
 **Назначение:** Обзор текущего состояния всех агентов и активных сессий
 
 **Основные элементы:**
+
 - **Статус агентов** - список всех настроенных Cyrus CLI инстансов с их статусом (online/offline)
 - **Активные сессии** - real-time список работающих Claude сессий с:
   - Issue identifier и title
@@ -241,6 +245,7 @@ Control Panel App
   - Errors/warnings
 
 **Технические детали:**
+
 ```typescript
 // Components
 <Dashboard>
@@ -283,6 +288,7 @@ function useSessionUpdates() {
 **Назначение:** Детальный мониторинг и управление Claude сессиями
 
 **Основные функции:**
+
 - **Просмотр активных сессий**
   - Список всех running сессий
   - Фильтры по repository, status, duration
@@ -300,6 +306,7 @@ function useSessionUpdates() {
   - View in Linear (external link)
 
 **UI Components:**
+
 ```
 ┌─────────────────────────────────────────────────────────┐
 │ Active Sessions                    [Filter] [Sort ▼]    │
@@ -321,6 +328,7 @@ function useSessionUpdates() {
 ```
 
 **Data Model:**
+
 ```typescript
 interface Session {
   id: string
@@ -360,6 +368,7 @@ interface SessionEvent {
 **Назначение:** Настройка и управление репозиториями, подключенными к Cyrus
 
 **Основные функции:**
+
 - **List Repositories**
   - All configured repositories
   - Status indicators (active/inactive)
@@ -384,6 +393,7 @@ interface SessionEvent {
   - Configuration preview
 
 **Configuration Editor:**
+
 ```typescript
 interface RepositoryConfig {
   id: string
@@ -435,6 +445,7 @@ interface LabelPromptConfig {
 **Основные разделы:**
 
 #### 4.1. Execution History
+
 - **Timeline view** - хронология всех выполненных сессий
 - **Filters:**
   - Date range
@@ -445,6 +456,7 @@ interface LabelPromptConfig {
 - **Logs export** - скачивание логов
 
 #### 4.2. Analytics Dashboard
+
 - **Charts & Metrics:**
   - Issues processed over time (line chart)
   - Success rate trends (area chart)
@@ -459,6 +471,7 @@ interface LabelPromptConfig {
   - Cost projections
 
 **Visualizations:**
+
 ```typescript
 // Using Recharts (lightweight, React-native)
 <ResponsiveContainer width="100%" height={300}>
@@ -481,6 +494,7 @@ interface LabelPromptConfig {
 **Разделы:**
 
 #### 5.1. General Settings
+
 - **User Profile**
   - Name, email
   - Avatar
@@ -492,6 +506,7 @@ interface LabelPromptConfig {
   - Default view preferences
 
 #### 5.2. Cyrus Agent Configuration
+
 - **Global Settings**
   - Default proxy URL
   - Server port
@@ -509,6 +524,7 @@ interface LabelPromptConfig {
   - Custom prompt templates
 
 #### 5.3. Integrations
+
 - **Linear**
   - Connected workspaces
   - OAuth tokens management
@@ -525,6 +541,7 @@ interface LabelPromptConfig {
   - Usage monitoring
 
 #### 5.4. Security
+
 - **Access Control**
   - User roles (Admin/User/Viewer)
   - API keys management
@@ -539,6 +556,7 @@ interface LabelPromptConfig {
 **Назначение:** Управление подпиской и биллингом (для Cyrus Pro)
 
 **Функции:**
+
 - **Subscription Overview**
   - Current plan (Free/Pro)
   - Billing cycle
@@ -561,6 +579,7 @@ interface LabelPromptConfig {
   - Proration handling
 
 **Stripe Integration:**
+
 ```typescript
 // Server Action for creating checkout session
 async function createCheckoutSession(planId: string) {
@@ -608,6 +627,7 @@ function UpgradeButton() {
 ### Design System
 
 **Цветовая палитра:**
+
 ```css
 /* Light mode */
 --background: 0 0% 100%;
@@ -645,6 +665,7 @@ function UpgradeButton() {
 ```
 
 **Typography:**
+
 ```css
 /* Font family */
 font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -661,6 +682,7 @@ font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 ```
 
 **Spacing System:**
+
 ```css
 /* Based on 4px base unit */
 --space-1: 0.25rem;   /* 4px */
@@ -700,6 +722,7 @@ font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 ```
 
 **Responsive Breakpoints:**
+
 ```typescript
 const breakpoints = {
   sm: '640px',   // Mobile
@@ -717,6 +740,7 @@ const breakpoints = {
 ### Component Library (shadcn/ui)
 
 **Используемые компоненты:**
+
 - `Button` - Кнопки с вариантами (default, outline, ghost, destructive)
 - `Card` - Контейнеры для группировки контента
 - `Dialog` - Модальные окна
@@ -735,6 +759,7 @@ const breakpoints = {
 - `Sheet` - Slide-over panels
 
 **Custom Components:**
+
 ```typescript
 // SessionCard - карточка активной сессии
 <SessionCard
@@ -805,6 +830,7 @@ const listVariants = {
 ### REST API Endpoints
 
 #### Sessions API
+
 ```typescript
 // GET /api/sessions/active
 // Response: { sessions: Session[] }
@@ -845,6 +871,7 @@ export async function POST(request: Request) {
 ```
 
 #### Repositories API
+
 ```typescript
 // GET /api/repositories
 // Response: { repositories: Repository[] }
@@ -865,6 +892,7 @@ export async function POST(request: Request) {
 ```
 
 #### Analytics API
+
 ```typescript
 // GET /api/analytics/overview
 // Query: ?from=2024-01-01&to=2024-12-31
@@ -884,6 +912,7 @@ export async function POST(request: Request) {
 ```
 
 #### Webhooks API
+
 ```typescript
 // POST /api/webhooks/linear
 // Signature verification: X-Linear-Signature
@@ -910,6 +939,7 @@ export async function POST(request: Request) {
 ### Real-time Updates
 
 #### Server-Sent Events (SSE)
+
 ```typescript
 // app/api/sessions/stream/route.ts
 export async function GET(request: Request) {
@@ -974,6 +1004,7 @@ function useSessionStream() {
 ### External Integrations
 
 #### Linear API Integration
+
 ```typescript
 import { LinearClient } from '@linear/sdk'
 
@@ -1006,6 +1037,7 @@ class LinearService {
 ```
 
 #### Stripe Integration
+
 ```typescript
 import Stripe from 'stripe'
 
@@ -1035,6 +1067,7 @@ export async function cancelSubscription(subscriptionId: string) {
 ```
 
 #### Cyrus CLI Communication
+
 ```typescript
 // Control Panel → Cyrus CLI communication
 
@@ -1080,6 +1113,7 @@ class CyrusCliClient {
 ### Authentication & Authorization
 
 #### Authentication Flow
+
 ```typescript
 // Using NextAuth.js v5
 
@@ -1136,6 +1170,7 @@ export const authConfig = {
 ```
 
 #### Role-Based Access Control (RBAC)
+
 ```typescript
 enum Role {
   ADMIN = 'admin',
@@ -1202,6 +1237,7 @@ export async function DELETE(request: Request) {
 ### Data Security
 
 #### Encryption
+
 ```typescript
 // Encrypt sensitive data (tokens, API keys)
 import { createCipheriv, createDecipheriv, randomBytes } from 'crypto'
@@ -1247,6 +1283,7 @@ await prisma.repository.create({
 ```
 
 #### API Key Management
+
 ```typescript
 // Generate API keys for programmatic access
 import { randomBytes } from 'crypto'
@@ -1301,6 +1338,7 @@ export async function authenticateApiKey(request: Request) {
 ### Webhook Security
 
 #### Signature Verification
+
 ```typescript
 // Verify Linear webhook signatures
 import { createHmac } from 'crypto'
@@ -1391,6 +1429,7 @@ export async function POST(request: Request) {
 ### Vercel Deployment
 
 #### Project Setup
+
 ```bash
 # Install Vercel CLI
 npm i -g vercel
@@ -1406,6 +1445,7 @@ vercel --prod
 ```
 
 #### Environment Variables
+
 ```bash
 # Vercel Dashboard → Settings → Environment Variables
 
@@ -1445,6 +1485,7 @@ POSTHOG_API_KEY="..."
 ```
 
 #### vercel.json Configuration
+
 ```json
 {
   "buildCommand": "pnpm build",
@@ -1478,6 +1519,7 @@ POSTHOG_API_KEY="..."
 ### Database Setup (Vercel Postgres)
 
 #### Schema
+
 ```prisma
 // prisma/schema.prisma
 datasource db {
@@ -1606,6 +1648,7 @@ model ApiKey {
 ```
 
 #### Migrations
+
 ```bash
 # Create migration
 pnpm prisma migrate dev --name init
@@ -1651,6 +1694,7 @@ await env.SESSIONS_KV.put(
 ### Monitoring & Observability
 
 #### Sentry (Error Tracking)
+
 ```typescript
 // sentry.client.config.ts
 import * as Sentry from '@sentry/nextjs'
@@ -1678,6 +1722,7 @@ try {
 ```
 
 #### PostHog (Analytics)
+
 ```typescript
 // lib/posthog.ts
 import posthog from 'posthog-js'
@@ -1701,6 +1746,7 @@ posthog.capture('session_started', {
 ```
 
 #### Vercel Analytics
+
 ```typescript
 // app/layout.tsx
 import { Analytics } from '@vercel/analytics/react'
@@ -1722,6 +1768,7 @@ export default function RootLayout({ children }) {
 ### CI/CD Pipeline
 
 #### GitHub Actions
+
 ```yaml
 # .github/workflows/ci.yml
 name: CI/CD
@@ -1796,6 +1843,7 @@ jobs:
 | **PostHog** | 1M events/month | - | $0.000225/event |
 
 **Оптимизация:**
+
 - Использовать edge functions для read-heavy операций (снижает DB load)
 - Кешировать в KV агрессивно (TTL 1-5 минут для dashboard data)
 - Использовать ISR (Incremental Static Regeneration) для статических страниц
@@ -1833,6 +1881,7 @@ jobs:
   - Session status polling fallback
 
 **Deliverables:**
+
 - Работающий dashboard с real-time мониторингом сессий
 - Управление репозиториями (CRUD)
 - Linear OAuth интеграция
@@ -1862,6 +1911,7 @@ jobs:
   - Integrations
 
 **Deliverables:**
+
 - Полнофункциональная панель управления
 - Детальная аналитика
 - Продвинутые настройки конфигурации
@@ -1891,6 +1941,7 @@ jobs:
   - Video tutorials
 
 **Deliverables:**
+
 - Production-ready control panel
 - Stripe billing integration
 - Polished UX с animations
@@ -2049,6 +2100,7 @@ function SearchInput() {
 ✅ **Developer Experience** - TypeScript, Turbopack, Biome, type-safe APIs
 
 **Следующие шаги:**
+
 1. Утверждение архитектуры
 2. Setup инфраструктуры (Vercel, Postgres, KV)
 3. Начало разработки MVP (Phase 1)

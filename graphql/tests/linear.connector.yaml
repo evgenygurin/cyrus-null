@@ -1,0 +1,222 @@
+config:
+  schema: graphql/schemas/linear-connector.graphql
+  name: linear-connector
+
+tests:
+  - name: "Should get current user"
+    target: "Query.me"
+    apiResponseBody: |
+      {
+        "data": {
+          "viewer": {
+            "id": "user-123",
+            "name": "Test User",
+            "email": "test@example.com",
+            "displayName": "Test User Display",
+            "avatarUrl": "https://example.com/avatar.png",
+            "createdAt": "2024-01-01T00:00:00Z",
+            "updatedAt": "2024-01-02T00:00:00Z"
+          }
+        }
+      }
+    expect:
+      connectorRequest:
+        url: https://api.linear.app/graphql
+        method: POST
+      connectorResponse: |
+        {
+          "id": "user-123",
+          "name": "Test User",
+          "email": "test@example.com",
+          "displayName": "Test User Display",
+          "avatarUrl": "https://example.com/avatar.png",
+          "createdAt": "2024-01-01T00:00:00Z",
+          "updatedAt": "2024-01-02T00:00:00Z"
+        }
+
+  - name: "Should get issues assigned to user"
+    target: "Query.myIssues"
+    variables:
+      $args:
+        first: "10"
+        includeArchived: "false"
+    apiResponseBody: |
+      {
+        "data": {
+          "viewer": {
+            "assignedIssues": {
+              "nodes": [
+                {
+                  "id": "issue-1",
+                  "identifier": "LIN-1",
+                  "title": "Test Issue 1",
+                  "description": "Description 1",
+                  "state": {
+                    "id": "state-1",
+                    "name": "In Progress",
+                    "type": "started"
+                  },
+                  "priority": 1,
+                  "priorityLabel": "Urgent",
+                  "assignee": {
+                    "id": "user-123",
+                    "name": "Test User",
+                    "email": "test@example.com"
+                  },
+                  "team": {
+                    "id": "team-1",
+                    "name": "Engineering",
+                    "key": "ENG"
+                  },
+                  "createdAt": "2024-01-01T00:00:00Z",
+                  "updatedAt": "2024-01-02T00:00:00Z"
+                }
+              ]
+            }
+          }
+        }
+      }
+    expect:
+      connectorRequest:
+        url: https://api.linear.app/graphql
+        method: POST
+      connectorResponse: |
+        [
+          {
+            "id": "issue-1",
+            "identifier": "LIN-1",
+            "title": "Test Issue 1",
+            "description": "Description 1",
+            "state": {
+              "id": "state-1",
+              "name": "In Progress",
+              "type": "started"
+            },
+            "priority": 1,
+            "priorityLabel": "Urgent",
+            "assignee": {
+              "id": "user-123"
+            },
+            "team": {
+              "id": "team-1"
+            },
+            "createdAt": "2024-01-01T00:00:00Z",
+            "updatedAt": "2024-01-02T00:00:00Z"
+          }
+        ]
+
+  - name: "Should create a new issue"
+    target: "Mutation.createIssue"
+    variables:
+      $args:
+        input:
+          title: "New Test Issue"
+          description: "Issue description"
+          teamId: "team-1"
+          assigneeId: "user-123"
+          priority: "2"
+    apiResponseBody: |
+      {
+        "data": {
+          "issueCreate": {
+            "success": true,
+            "issue": {
+              "id": "issue-new",
+              "identifier": "LIN-100",
+              "title": "New Test Issue",
+              "description": "Issue description",
+              "state": {
+                "id": "state-unstarted",
+                "name": "Backlog",
+                "type": "unstarted"
+              },
+              "priority": 2,
+              "priorityLabel": "High",
+              "assignee": {
+                "id": "user-123",
+                "name": "Test User",
+                "email": "test@example.com"
+              },
+              "team": {
+                "id": "team-1",
+                "name": "Engineering",
+                "key": "ENG"
+              },
+              "createdAt": "2024-01-03T00:00:00Z",
+              "updatedAt": "2024-01-03T00:00:00Z"
+            }
+          }
+        }
+      }
+    expect:
+      connectorRequest:
+        url: https://api.linear.app/graphql
+        method: POST
+      connectorResponse: |
+        {
+          "id": "issue-new",
+          "identifier": "LIN-100",
+          "title": "New Test Issue",
+          "description": "Issue description",
+          "state": {
+            "id": "state-unstarted",
+            "name": "Backlog",
+            "type": "unstarted"
+          },
+          "priority": 2,
+          "priorityLabel": "High",
+          "assignee": {
+            "id": "user-123"
+          },
+          "team": {
+            "id": "team-1"
+          },
+          "createdAt": "2024-01-03T00:00:00Z",
+          "updatedAt": "2024-01-03T00:00:00Z"
+        }
+
+  - name: "Should add comment to issue"
+    target: "Mutation.addComment"
+    variables:
+      $args:
+        issueId: "issue-1"
+        body: "This is a test comment"
+    apiResponseBody: |
+      {
+        "data": {
+          "commentCreate": {
+            "success": true,
+            "comment": {
+              "id": "comment-1",
+              "body": "This is a test comment",
+              "user": {
+                "id": "user-123",
+                "name": "Test User",
+                "email": "test@example.com"
+              },
+              "issue": {
+                "id": "issue-1"
+              },
+              "createdAt": "2024-01-03T12:00:00Z",
+              "updatedAt": "2024-01-03T12:00:00Z"
+            }
+          }
+        }
+      }
+    expect:
+      connectorRequest:
+        url: https://api.linear.app/graphql
+        method: POST
+      connectorResponse: |
+        {
+          "id": "comment-1",
+          "body": "This is a test comment",
+          "user": {
+            "id": "user-123"
+          },
+          "issue": {
+            "id": "issue-1"
+          },
+          "createdAt": "2024-01-03T12:00:00Z",
+          "updatedAt": "2024-01-03T12:00:00Z"
+        }

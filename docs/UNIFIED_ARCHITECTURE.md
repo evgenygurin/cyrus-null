@@ -1,4 +1,5 @@
 # Cyrus: Unified Architecture
+
 ## Интегрированная архитектура с Control Panel и Codegen Executor
 
 **Версия**: 2.0.0  
@@ -10,6 +11,7 @@
 ## Обзор
 
 Данный документ описывает **единую архитектуру Cyrus**, объединяющую:
+
 1. **Web Control Panel** (Next.js 15) - веб-интерфейс для управления и мониторинга
 2. **Codegen Cloud Executor** - облачное выполнение задач через Codegen.com
 3. **Hybrid Execution Model** - гибкий выбор между локальным и облачным выполнением
@@ -129,12 +131,14 @@
 **Назначение**: Web UI для управления Cyrus агентами, мониторинга задач и аналитики.
 
 **Технологии**:
+
 - Next.js 15 (App Router, React 19, React Compiler)
 - Tailwind CSS + shadcn/ui components
 - Server Components для оптимизации производительности
 - Server-Sent Events (SSE) для real-time обновлений
 
 **Основные страницы**:
+
 ```
 /                          → Dashboard (overview всех агентов)
 /repositories              → Список и управление репозиториями
@@ -147,6 +151,7 @@
 ```
 
 **Ключевые функции**:
+
 - Real-time статус агентов (online/offline/working)
 - Live stream логов выполнения задач
 - Cost breakdown по задачам и репозиториям
@@ -158,6 +163,7 @@
 **Назначение**: REST API и Server Actions для управления данными.
 
 **Endpoints**:
+
 ```typescript
 // Repository Management
 GET    /api/repositories                // Список репозиториев
@@ -183,6 +189,7 @@ GET    /api/analytics/cost-trends       // Cost trends over time
 ```
 
 **Server Actions**:
+
 ```typescript
 // packages/control-panel/src/app/actions/
 - createRepository(data)
@@ -192,6 +199,7 @@ GET    /api/analytics/cost-trends       // Cost trends over time
 ```
 
 **Database Schema** (PostgreSQL via Prisma):
+
 ```prisma
 model Repository {
   id                String   @id @default(cuid())
@@ -285,6 +293,7 @@ model SessionLog {
 **Назначение**: Обработка OAuth, webhooks и роутинг событий.
 
 **Функции** (без изменений из существующей архитектуры):
+
 - Linear OAuth flow
 - GitHub OAuth flow
 - Webhook ingestion от Linear
@@ -409,6 +418,7 @@ export class EdgeWorker {
 ```
 
 **TaskOrchestrator** (без изменений - см. `refactor/CODEGEN_INTEGRATION_PLAN.md`):
+
 - Интерфейс `TaskExecutor`
 - Стратегии выбора: `local-only`, `cloud-only`, `hybrid-smart`, `hybrid-parallel`, `cost-optimized`
 - Логика анализа сложности задач
@@ -417,6 +427,7 @@ export class EdgeWorker {
 ### 5A. Local Executor (Layer 5A)
 
 **ClaudeRunner** (без изменений):
+
 - Локальное выполнение через Claude Code SDK
 - Git worktrees для изоляции
 - Быстрые итерации
@@ -426,6 +437,7 @@ export class EdgeWorker {
 ### 5B. Cloud Executor (Layer 5B)
 
 **CodegenExecutor** (новый пакет):
+
 - Интеграция с Codegen API
 - Изолированные sandboxes (SOC 2 compliant)
 - Параллельное выполнение множества задач
@@ -434,6 +446,7 @@ export class EdgeWorker {
 - Используется для: feature implementation, bug fixes, testing
 
 **Ключевые методы**:
+
 ```typescript
 // packages/codegen-executor/src/CodegenExecutor.ts
 
@@ -539,6 +552,7 @@ export class CodegenExecutor implements TaskExecutor {
 **Communication Method**: REST API + Database
 
 **Data Flow**:
+
 ```
 EdgeWorker → Control Panel:
 - Create session records (POST /api/sessions)
@@ -553,6 +567,7 @@ Control Panel → EdgeWorker:
 ```
 
 **Implementation**:
+
 ```typescript
 // packages/control-panel-client/src/ControlPanelClient.ts
 
@@ -585,6 +600,7 @@ export class ControlPanelClient {
 **Communication Method**: Через CodegenExecutor (EdgeWorker вызывает Codegen API)
 
 **Control Panel отображает**:
+
 - Codegen session IDs
 - Workspace paths (если accessible)
 - Cost per session
@@ -756,15 +772,18 @@ CODEGEN_API_TOKEN=...
 ### Estimated Costs (Monthly)
 
 **Control Panel Infrastructure**:
+
 - Vercel Hobby: $0 (для personal use)
 - Vercel Pro: $20/месяц (для teams)
 - Vercel Postgres: $0-20/месяц (зависит от usage)
 - Vercel Blob: $0.15/GB storage + $0.20/GB bandwidth
 
 **EdgeWorker (User's Machine)**:
+
 - $0 (runs locally)
 
 **Executors**:
+
 - Local (ClaudeRunner): $0 (требует Claude Pro $20/месяц)
 - Cloud (Codegen): Pay-per-use (~$0.50-2.00 per task)
 
@@ -784,11 +803,13 @@ CODEGEN_API_TOKEN=...
 ### Data Encryption
 
 **At Rest**:
+
 - PostgreSQL: All sensitive fields encrypted (tokens, API keys)
 - Vercel Blob: Encrypted by default
 - Local config: `~/.cyrus/config.json` encrypted
 
 **In Transit**:
+
 - TLS 1.3 для всех HTTP connections
 - Websockets (SSE) over HTTPS
 - Git operations over SSH
@@ -796,16 +817,19 @@ CODEGEN_API_TOKEN=...
 ### Authentication & Authorization
 
 **Control Panel**:
+
 - OAuth 2.0 (Linear, GitHub)
 - Session cookies (httpOnly, secure, sameSite)
 - API keys для EdgeWorker communication (stored encrypted)
 
 **EdgeWorker**:
+
 - Linear API tokens (scoped permissions)
 - GitHub tokens (scoped to specific repos)
 - Codegen API tokens (scoped to org)
 
 **Isolation**:
+
 - Codegen sandboxes: Isolated containers (SOC 2 compliant)
 - Git worktrees: Separate directories per issue
 - Database: Row-level security policies (RLS) в Postgres
@@ -813,6 +837,7 @@ CODEGEN_API_TOKEN=...
 ### Audit Logging
 
 Все действия логируются:
+
 - Session creation/updates
 - Configuration changes
 - Cost spending
@@ -826,24 +851,28 @@ CODEGEN_API_TOKEN=...
 ### Metrics Collected
 
 **System Metrics**:
+
 - EdgeWorker status (online/offline/working)
 - Executor availability (local/cloud)
 - Active sessions count
 - Queue depth
 
 **Performance Metrics**:
+
 - Task duration (avg, p50, p95, p99)
 - Verification success rate
 - PR creation rate
 - Error rate
 
 **Cost Metrics**:
+
 - Cost per task (local vs cloud)
 - Daily/weekly/monthly spending
 - Cost per repository
 - Cost per agent type (orchestrator/builder/debugger)
 
 **User Experience Metrics**:
+
 - Time to first response
 - Time to completion
 - User satisfaction (via feedback)
@@ -885,6 +914,7 @@ const alerts: AlertRule[] = [
 ### Dashboards
 
 **Main Dashboard** (`/`):
+
 - Active agents count
 - Running tasks (real-time)
 - Success rate (last 24h)
@@ -892,12 +922,14 @@ const alerts: AlertRule[] = [
 - Recent activity feed
 
 **Analytics Dashboard** (`/analytics`):
+
 - Cost trends (line chart)
 - Executor usage (pie chart: local vs cloud)
 - Task duration distribution (histogram)
 - Success rate by agent type (bar chart)
 
 **Repository Dashboard** (`/repositories/[id]`):
+
 - Repository-specific metrics
 - Active sessions
 - Cost per repository
@@ -910,6 +942,7 @@ const alerts: AlertRule[] = [
 ### For Existing Cyrus Users
 
 **Phase 1: Add Control Panel (Optional)**
+
 ```bash
 1. User continues using CLI: `cyrus` (nothing changes)
 2. User deploys Control Panel to Vercel (optional)
@@ -927,6 +960,7 @@ const alerts: AlertRule[] = [
 ```
 
 **Phase 2: Enable Codegen (Optional)**
+
 ```bash
 1. User opens Control Panel → /repositories/[id]/config
 2. Enables Codegen:
@@ -940,6 +974,7 @@ const alerts: AlertRule[] = [
 ```
 
 **Phase 3: Full Adoption**
+
 ```bash
 1. User is now using:
    - Control Panel for monitoring
@@ -953,6 +988,7 @@ const alerts: AlertRule[] = [
 ### Backward Compatibility
 
 **100% backward compatible**:
+
 - ✅ CLI works without Control Panel
 - ✅ Local-only mode works without Codegen
 - ✅ All existing configs supported
@@ -963,24 +999,28 @@ const alerts: AlertRule[] = [
 ## Roadmap
 
 ### Phase 1: Foundation (Q1 2025)
+
 - ✅ Next.js Control Panel deployment
 - ✅ PostgreSQL schema and API
 - ✅ EdgeWorker → Control Panel integration
 - ✅ Basic monitoring dashboard
 
 ### Phase 2: Codegen Integration (Q2 2025)
+
 - ✅ CodegenExecutor implementation
 - ✅ TaskOrchestrator with hybrid strategies
 - ✅ Cost tracking and analytics
 - ✅ Control Panel Codegen configuration UI
 
 ### Phase 3: Advanced Features (Q3 2025)
+
 - ⏳ Parallel execution (multiple Codegen sessions)
 - ⏳ Advanced analytics (ML-based cost prediction)
 - ⏳ Custom alert rules
 - ⏳ Slack/Discord integrations
 
 ### Phase 4: Enterprise (Q4 2025)
+
 - ⏳ Multi-tenant support
 - ⏳ Team management (RBAC)
 - ⏳ Audit logs and compliance
@@ -1028,6 +1068,7 @@ cyrus/
 ### C. API Reference
 
 См. полный API reference в:
+
 - `docs/CONTROL_PANEL_ARCHITECTURE.md` (Database schema, API endpoints)
 - `refactor/CODEGEN_INTEGRATION_PLAN.md` (Executor interface, TaskOrchestrator)
 

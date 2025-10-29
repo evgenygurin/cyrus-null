@@ -1,6 +1,7 @@
 # Cyrus Control Panel - Implementation Guide
 
 ## Оглавление
+
 - [Project Structure](#project-structure)
 - [Setup Instructions](#setup-instructions)
 - [Implementation Phases](#implementation-phases)
@@ -472,6 +473,7 @@ export default config
 **Goal:** Setup project infrastructure and core layout
 
 #### Day 1-2: Project Setup
+
 - [x] Create Next.js project
 - [x] Install dependencies
 - [x] Setup Prisma with database schema
@@ -479,6 +481,7 @@ export default config
 - [ ] Initialize Git repository
 
 #### Day 3-4: Authentication
+
 ```typescript
 // src/lib/auth/auth.ts
 import NextAuth from 'next-auth'
@@ -520,6 +523,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 ```
 
 #### Day 5-7: Core Layout
+
 - [ ] Create root layout with providers
 - [ ] Build Header component
 - [ ] Build Sidebar component
@@ -527,6 +531,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 - [ ] Add Command Palette (⌘K)
 
 **Files to create:**
+
 ```
 src/app/layout.tsx
 src/app/(auth)/layout.tsx
@@ -539,6 +544,7 @@ src/components/layout/CommandPalette.tsx
 ### Phase 2: Dashboard & Sessions (Week 2)
 
 #### Day 8-10: Dashboard Page
+
 ```typescript
 // src/app/(dashboard)/page.tsx
 import { auth } from '@/lib/auth/auth'
@@ -568,6 +574,7 @@ export default async function DashboardPage() {
 ```
 
 **Components to create:**
+
 - StatsOverview
 - ActiveSessions
 - SessionCard
@@ -575,6 +582,7 @@ export default async function DashboardPage() {
 - MetricCard
 
 #### Day 11-14: Sessions Management
+
 - [ ] Sessions list page
 - [ ] Session details modal/page
 - [ ] Console output viewer
@@ -582,6 +590,7 @@ export default async function DashboardPage() {
 - [ ] Stop/Kill session actions
 
 **API Routes:**
+
 ```typescript
 // src/app/api/sessions/route.ts
 export async function GET(request: Request) {
@@ -622,6 +631,7 @@ export async function GET(request: Request) {
 ### Phase 3: Repository Management (Week 3)
 
 #### Day 15-17: Repository List & Forms
+
 ```typescript
 // src/components/repositories/RepositoryForm.tsx
 'use client'
@@ -667,12 +677,14 @@ export function RepositoryForm({
 ```
 
 #### Day 18-21: Advanced Configuration
+
 - [ ] Allowed tools editor
 - [ ] Routing rules configuration
 - [ ] Label prompts setup
 - [ ] MCP servers configuration
 
 **Components:**
+
 - RepositoryCard
 - RepositoryForm
 - ToolsEditor
@@ -682,6 +694,7 @@ export function RepositoryForm({
 ### Phase 4: Analytics & History (Week 4)
 
 #### Day 22-24: History Page
+
 ```typescript
 // src/app/(dashboard)/history/page.tsx
 import { SessionHistory } from '@/components/history/SessionHistory'
@@ -708,6 +721,7 @@ export default async function HistoryPage({
 ```
 
 #### Day 25-28: Analytics Dashboard
+
 - [ ] Overview metrics
 - [ ] Time-series charts (Recharts)
 - [ ] Tool usage distribution
@@ -715,6 +729,7 @@ export default async function HistoryPage({
 - [ ] Export functionality
 
 **Components:**
+
 - SessionsChart
 - ToolUsageChart
 - SuccessRateChart
@@ -724,12 +739,14 @@ export default async function HistoryPage({
 ### Phase 5: Settings & Billing (Week 5)
 
 #### Day 29-31: Settings Pages
+
 - [ ] Profile settings
 - [ ] Agent configuration
 - [ ] Integrations management
 - [ ] Security settings
 
 #### Day 32-35: Billing Integration
+
 ```typescript
 // src/app/api/billing/checkout/route.ts
 import Stripe from 'stripe'
@@ -755,6 +772,7 @@ export async function POST(request: Request) {
 ### Phase 6: Polish & Testing (Week 6)
 
 #### Day 36-38: UX Polish
+
 - [ ] Loading states
 - [ ] Error handling
 - [ ] Empty states
@@ -762,6 +780,7 @@ export async function POST(request: Request) {
 - [ ] Animations
 
 #### Day 39-42: Testing
+
 - [ ] Unit tests (Vitest)
 - [ ] Integration tests
 - [ ] E2E tests (Playwright)
@@ -774,6 +793,7 @@ export async function POST(request: Request) {
 ### Core Files
 
 #### 1. Database Schema
+
 ```prisma
 // prisma/schema.prisma
 datasource db {
@@ -905,6 +925,7 @@ model ApiKey {
 ```
 
 #### 2. Root Layout
+
 ```typescript
 // src/app/layout.tsx
 import type { Metadata } from 'next'
@@ -940,6 +961,7 @@ export default function RootLayout({
 ```
 
 #### 3. Providers
+
 ```typescript
 // src/app/providers.tsx
 'use client'
@@ -974,6 +996,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 ```
 
 #### 4. Dashboard Layout
+
 ```typescript
 // src/app/(dashboard)/layout.tsx
 import { auth } from '@/lib/auth/auth'
@@ -1142,16 +1165,19 @@ vercel domains add control.cyrus.com
 ### Regular Tasks
 
 **Daily:**
+
 - Monitor error rates (Sentry)
 - Check API response times
 - Review failed sessions
 
 **Weekly:**
+
 - Review analytics trends
 - Update dependencies: `pnpm update`
 - Check security vulnerabilities: `pnpm audit`
 
 **Monthly:**
+
 - Database optimization
 - Review and archive old sessions
 - Cost analysis
@@ -1188,6 +1214,7 @@ try {
 ## Additional Resources
 
 ### Documentation
+
 - [Next.js 15 Docs](https://nextjs.org/docs)
 - [Prisma Docs](https://www.prisma.io/docs)
 - [shadcn/ui](https://ui.shadcn.com)
@@ -1195,6 +1222,7 @@ try {
 - [Vercel Deployment](https://vercel.com/docs)
 
 ### Tools
+
 - [Prisma Studio](https://www.prisma.io/studio) - Database GUI
 - [React DevTools](https://react.dev/learn/react-developer-tools)
 - [Vercel Analytics](https://vercel.com/analytics)

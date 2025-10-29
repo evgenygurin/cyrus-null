@@ -33,7 +33,3 @@ OAUTH_REDIRECT_URI = "https://cyrus-proxy.ceedar.workers.dev/oauth/callback"
 # [[migrations]]
 # tag = "v2"
 # deleted_classes = ["EventStreamDurableObject"]
-
-# Local development settings
-[miniflare]
-kv_persist = true
