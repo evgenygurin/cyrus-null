@@ -9,6 +9,7 @@
 ## Обзор
 
 Данный документ описывает результаты интеграции документации из двух веток:
+
 - `feature/codegen-integration-plan` - документация по интеграции Codegen cloud executor
 - `docs/control-panel-architecture` - документация по Next.js web control panel
 
@@ -17,6 +18,7 @@
 ### Ветка `feature/codegen-integration-plan` (refactor/)
 
 **Ключевые документы**:
+
 1. **README.md** - Индекс, рекомендует Codegen-only подход
 2. **CODEGEN_ONLY_ARCHITECTURE.md** - Упрощенная архитектура с облачным выполнением
 3. **CODEGEN_INTEGRATION_PLAN.md** - Детальный план интеграции (1125 строк)
@@ -27,6 +29,7 @@
 8. **SESSION_SUMMARY.md** - История дискуссии
 
 **Фокус**: Backend architecture - где и как выполняются задачи
+
 - Codegen API интеграция
 - Executor interface (TaskExecutor)
 - TaskOrchestrator с стратегиями выбора
@@ -37,11 +40,13 @@
 ### Ветка `docs/control-panel-architecture` (docs/)
 
 **Ключевые документы**:
+
 1. **CONTROL_PANEL_ARCHITECTURE.md** - Полная архитектура (2061 строк)
 2. **CONTROL_PANEL_IMPLEMENTATION.md** - План реализации (1207 строк)
 3. **CONTROL_PANEL_UI_SPECS.md** - UI/UX спецификации (1289 строк)
 
 **Фокус**: Frontend architecture - как пользователь управляет и мониторит
+
 - Next.js 15 web application
 - PostgreSQL database schema
 - REST API endpoints
@@ -132,6 +137,7 @@
 **Файл**: `docs/UNIFIED_ARCHITECTURE.md`
 
 **Содержание**:
+
 - Полная архитектура (5 layers)
 - Интеграция Control Panel + Codegen
 - Data flow diagrams
@@ -143,6 +149,7 @@
 - Migration path
 
 **Ключевые разделы**:
+
 1. Архитектурные слои (Layer 1-5)
 2. Control Panel ↔ EdgeWorker integration
 3. Control Panel ↔ Codegen integration
@@ -169,6 +176,7 @@ refactor/
 ```
 
 **Почему сохранено**:
+
 - Содержит детальные технические спецификации
 - 12 архитектурных диаграмм (ASCII art)
 - Историю принятия решений
@@ -178,6 +186,7 @@ refactor/
 ### 3. Обновлены Существующие Документы Control Panel
 
 **Не требуется обновление** - документация Control Panel остается актуальной:
+
 - `CONTROL_PANEL_ARCHITECTURE.md` - описывает frontend/backend/database
 - `CONTROL_PANEL_IMPLEMENTATION.md` - план реализации по фазам
 - `CONTROL_PANEL_UI_SPECS.md` - UI/UX спецификации
@@ -211,6 +220,7 @@ refactor/                             # IMPORTED from feature branch
 ### Для Product Managers
 
 **Начните с**:
+
 1. `docs/UNIFIED_ARCHITECTURE.md` - общее видение системы
 2. `refactor/TEAM_BRIEFING.md` - краткое описание для команды
 3. `docs/CONTROL_PANEL_UI_SPECS.md` - UI/UX спецификации
@@ -218,6 +228,7 @@ refactor/                             # IMPORTED from feature branch
 ### Для Backend Developers
 
 **Начните с**:
+
 1. `docs/UNIFIED_ARCHITECTURE.md` - полная картина
 2. `refactor/CODEGEN_INTEGRATION_PLAN.md` - детальный implementation plan
 3. `refactor/CODEGEN_ARCHITECTURE_DIAGRAMS.md` - визуализация
@@ -226,6 +237,7 @@ refactor/                             # IMPORTED from feature branch
 ### Для Frontend Developers
 
 **Начните с**:
+
 1. `docs/CONTROL_PANEL_ARCHITECTURE.md` - Next.js architecture
 2. `docs/CONTROL_PANEL_IMPLEMENTATION.md` - implementation guide
 3. `docs/CONTROL_PANEL_UI_SPECS.md` - component library
@@ -234,6 +246,7 @@ refactor/                             # IMPORTED from feature branch
 ### Для DevOps Engineers
 
 **Начните с**:
+
 1. `docs/UNIFIED_ARCHITECTURE.md` (Section: Deployment Architecture)
 2. `docs/CONTROL_PANEL_ARCHITECTURE.md` (Section: Deployment Strategy)
 3. `refactor/CODEGEN_ARCHITECTURE_DIAGRAMS.md` (Diagram 9: Configuration)
@@ -241,6 +254,7 @@ refactor/                             # IMPORTED from feature branch
 ### Для Архитекторов
 
 **Читайте всё в порядке**:
+
 1. `docs/UNIFIED_ARCHITECTURE.md` - общая картина
 2. `refactor/WHY_CUSTOM_ORCHESTRATOR.md` - решения и trade-offs
 3. `refactor/CODEGEN_ARCHITECTURE_DIAGRAMS.md` - все диаграммы
@@ -254,10 +268,12 @@ refactor/                             # IMPORTED from feature branch
 **Решение**: Cyrus поддерживает как локальное (ClaudeRunner), так и облачное (Codegen) выполнение.
 
 **Rationale**:
+
 - Локально: orchestration, analysis, validation (быстро, бесплатно)
 - В облаке: feature implementation, bug fixes, testing (изолированно, параллельно)
 
 **Источники**:
+
 - `refactor/WHY_CUSTOM_ORCHESTRATOR.md`
 - `refactor/CODEGEN_INTEGRATION_PLAN.md` (Section 4.4: TaskOrchestrator)
 
@@ -266,11 +282,13 @@ refactor/                             # IMPORTED from feature branch
 **Решение**: Web UI не управляет выполнением, а мониторит и конфигурирует.
 
 **Rationale**:
+
 - EdgeWorker - автономный (работает без Control Panel)
 - Control Panel - optional enhancement (visibility, analytics)
 - Separation of concerns: execution logic ≠ monitoring UI
 
 **Источники**:
+
 - `docs/CONTROL_PANEL_ARCHITECTURE.md` (Section: Architecture Overview)
 - `docs/UNIFIED_ARCHITECTURE.md` (Section: Key Integrations)
 
@@ -279,11 +297,13 @@ refactor/                             # IMPORTED from feature branch
 **Решение**: PostgreSQL хранит конфигурацию, EdgeWorker читает из БД.
 
 **Rationale**:
+
 - Централизованная конфигурация
 - Multi-agent support (несколько EdgeWorker'ов могут читать одну конфигурацию)
 - Web UI может обновлять конфигурацию в реальном времени
 
 **Источники**:
+
 - `docs/CONTROL_PANEL_ARCHITECTURE.md` (Section: Database Schema)
 - `docs/UNIFIED_ARCHITECTURE.md` (Section: Configuration Management)
 
@@ -292,11 +312,13 @@ refactor/                             # IMPORTED from feature branch
 **Решение**: Единый интерфейс `TaskExecutor` для всех executor'ов.
 
 **Rationale**:
+
 - Легко добавить новые executor'ы (OpenAI Assistants, Anthropic API, etc.)
 - TaskOrchestrator не знает о деталях реализации
 - Тестируемость (mock interface)
 
 **Источники**:
+
 - `refactor/CODEGEN_INTEGRATION_PLAN.md` (Section 4.2: Executor Interface)
 - `refactor/CODEGEN_ARCHITECTURE_DIAGRAMS.md` (Diagram 3)
 
@@ -305,11 +327,13 @@ refactor/                             # IMPORTED from feature branch
 **Решение**: Метрики собираются на уровне executor'а, агрегируются в БД, визуализируются в Control Panel.
 
 **Rationale**:
+
 - Прозрачность затрат
 - Budget control (maxCostPerTask, maxCostPerDay)
 - Cost-based executor selection
 
 **Источники**:
+
 - `refactor/CODEGEN_INTEGRATION_PLAN.md` (Section 6.5: Monitoring)
 - `refactor/CODEGEN_ARCHITECTURE_DIAGRAMS.md` (Diagram 7: Cost Optimization)
 - `docs/CONTROL_PANEL_ARCHITECTURE.md` (Section: Analytics Views)
@@ -390,16 +414,19 @@ refactor/                             # IMPORTED from feature branch
 ### Рекомендации
 
 **Приоритет 1 (Must Have)**:
+
 - Реализовать `executor-interface` и `TaskOrchestrator`
 - Базовая интеграция Codegen
 - Minimal Control Panel (monitoring only)
 
 **Приоритет 2 (Should Have)**:
+
 - Full Control Panel UI (dashboard, analytics)
 - Advanced orchestration strategies
 - Cost optimization
 
 **Приоритет 3 (Nice to Have)**:
+
 - Parallel execution (multiple Codegen sessions)
 - ML-based cost prediction
 - Custom alert rules

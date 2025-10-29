@@ -6,9 +6,10 @@
 
 ## 🎯 Начните здесь
 
-### Для быстрого понимания всей системы:
+### Для быстрого понимания всей системы
 
 **[UNIFIED_ARCHITECTURE.md](./UNIFIED_ARCHITECTURE.md)** ⭐ **ГЛАВНЫЙ ДОКУМЕНТ**
+
 - Полная архитектура: Control Panel + Codegen Integration
 - 5 архитектурных слоев
 - Integration points между всеми компонентами
@@ -17,6 +18,7 @@
 - Security & cost model
 
 **[INTEGRATION_SUMMARY.md](./INTEGRATION_SUMMARY.md)** 📋 **ОТЧЕТ ОБ ИНТЕГРАЦИИ**
+
 - Как объединены Control Panel и Codegen документация
 - Анализ противоречий (спойлер: их нет!)
 - Mapping исходных документов
@@ -58,6 +60,7 @@
 > **См.**: [`refactor/`](../refactor/) directory для детальной Codegen документации
 
 **Ключевые документы в `refactor/`**:
+
 - `CODEGEN_ONLY_ARCHITECTURE.md` - упрощенная архитектура (рекомендуется)
 - `CODEGEN_INTEGRATION_PLAN.md` - детальный plan (1125+ строк)
 - `CODEGEN_ARCHITECTURE_DIAGRAMS.md` - 12 архитектурных диаграмм
@@ -123,6 +126,7 @@
 | refactor/WHY_CUSTOM_ORCHESTRATOR.md | Strategic | ✅ Complete | 2025-01-08 |
 
 **Легенда**:
+
 - ✅ Complete - готово к использованию
 - 🔄 In Progress - в разработке
 - 📋 Draft - черновик
@@ -218,7 +222,7 @@
 ## 📞 Контакты
 
 - **Linear Workspace**: [Ссылка на workspace]
-- **GitHub Repository**: https://github.com/evgenygurin/cyrus-null
+- **GitHub Repository**: <https://github.com/evgenygurin/cyrus-null>
 - **Documentation Issues**: Используйте GitHub Issues с label `documentation`
 
 ---

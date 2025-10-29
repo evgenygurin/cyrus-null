@@ -1,0 +1,47 @@
+# Apollo Router Configuration for Local Development
+
+# Server configuration
+supergraph:
+  listen: 0.0.0.0:4000
+  introspection: true
+
+# CORS configuration for local development
+cors:
+  origins:
+    - http://localhost:*
+    - https://studio.apollographql.com
+  allow_credentials: true
+
+# Headers configuration
+headers:
+  all:
+    request:
+      - propagate:
+          matching: .*
+
+# Connectors configuration
+connectors:
+  sources:
+    linear_api:
+      $config:
+        # Configuration values can be accessed with $config in your schema
+        api_version: "v2"
+
+# Development features
+sandbox:
+  enabled: true
+
+# Telemetry (optional)
+telemetry:
+  apollo:
+    send_usage_reporting: false
+  metrics:
+    common:
+      service_name: cyrus-graphql-gateway
+
+# Limits
+limits:
+  max_depth: 15
+  max_height: 200
+  max_aliases: 30
+  max_root_fields: 20

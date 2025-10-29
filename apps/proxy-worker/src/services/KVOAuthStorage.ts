@@ -25,9 +25,9 @@ export class KVOAuthStorage implements OAuthTokenStorage {
 		// Encrypt sensitive data
 		const encrypted = await this.crypto.encryptToken(tokenData);
 
-		// Calculate TTL based on expiration
+		// Calculate TTL based on expiration (minimum 60 seconds for KV)
 		const ttl = tokenData.expiresAt
-			? Math.max(1, Math.floor((tokenData.expiresAt - Date.now()) / 1000))
+			? Math.max(60, Math.floor((tokenData.expiresAt - Date.now()) / 1000))
 			: undefined;
 
 		// Store in KV
