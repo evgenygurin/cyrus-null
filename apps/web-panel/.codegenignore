@@ -1,0 +1,14 @@
+# Codegen specific ignore file
+# Keep node_modules cached for faster startups
+!node_modules
+
+# Ignore build artifacts
+.next/
+out/
+build/
+
+# Ignore local env
+.env*.local
+
+# Ignore logs
+*.log

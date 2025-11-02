@@ -1,0 +1,13 @@
+import { NextResponse } from "next/server";
+
+const startTime = Date.now();
+
+export async function GET() {
+	return NextResponse.json({
+		status: "ok",
+		uptime: Math.floor((Date.now() - startTime) / 1000),
+		timestamp: new Date().toISOString(),
+		environment: process.env.NODE_ENV,
+		isCodegenSandbox: Boolean(process.env.CG_PREVIEW_URL),
+	});
+}
