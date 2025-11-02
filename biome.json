@@ -11,7 +11,8 @@
 			"suspicious": {
 				"noExplicitAny": "off",
 				"noArrayIndexKey": "off",
-				"noUnsafeDeclarationMerging": "off"
+				"noUnsafeDeclarationMerging": "off",
+				"noUnknownAtRules": "off"
 			}
 		},
 		"domains": {
