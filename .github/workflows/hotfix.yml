@@ -11,10 +11,30 @@ on:
     types: [opened, synchronize, reopened]
 
 jobs:
+  # Check if this is actually a hotfix branch before running any jobs
+  check-hotfix-branch:
+    runs-on: ubuntu-latest
+    outputs:
+      is-hotfix: ${{ steps.check.outputs.is-hotfix }}
+    steps:
+      - name: Check if branch is hotfix
+        id: check
+        run: |
+          BRANCH_NAME="${{ github.head_ref || github.ref_name }}"
+          echo "Branch name: $BRANCH_NAME"
+          if [[ "$BRANCH_NAME" == hotfix/* ]]; then
+            echo "is-hotfix=true" >> $GITHUB_OUTPUT
+            echo "✅ This is a hotfix branch"
+          else
+            echo "is-hotfix=false" >> $GITHUB_OUTPUT
+            echo "ℹ️ This is not a hotfix branch, skipping hotfix workflow"
+          fi
+
   # Validate hotfix branch naming and structure
   validate-hotfix:
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/heads/hotfix/') || (github.event_name == 'pull_request' && startsWith(github.head_ref, 'hotfix/'))
+    needs: check-hotfix-branch
+    if: needs.check-hotfix-branch.outputs.is-hotfix == 'true'
     
     steps:
     - uses: actions/checkout@v4
@@ -44,8 +64,8 @@ jobs:
   # Test hotfix changes
   test-hotfix:
     runs-on: ubuntu-latest
-    needs: validate-hotfix
-    if: startsWith(github.ref, 'refs/heads/hotfix/') || (github.event_name == 'pull_request' && startsWith(github.head_ref, 'hotfix/'))
+    needs: [check-hotfix-branch, validate-hotfix]
+    if: needs.check-hotfix-branch.outputs.is-hotfix == 'true'
     
     steps:
     - uses: actions/checkout@v4
@@ -90,8 +110,8 @@ jobs:
   # Auto-merge hotfix to multiple branches
   deploy-hotfix:
     runs-on: ubuntu-latest
-    needs: [validate-hotfix, test-hotfix]
-    if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/hotfix/')
+    needs: [check-hotfix-branch, validate-hotfix, test-hotfix]
+    if: needs.check-hotfix-branch.outputs.is-hotfix == 'true' && github.event_name == 'push'
     
     steps:
     - uses: actions/checkout@v4
@@ -148,8 +168,8 @@ This is an automated hotfix deployment.
   # Hotfix deployment notification
   notify-hotfix-deployment:
     runs-on: ubuntu-latest
-    needs: deploy-hotfix
-    if: always() && startsWith(github.ref, 'refs/heads/hotfix/')
+    needs: [check-hotfix-branch, deploy-hotfix]
+    if: always() && needs.check-hotfix-branch.outputs.is-hotfix == 'true'
     
     steps:
     - name: Notify team
@@ -170,7 +190,8 @@ This is an automated hotfix deployment.
   # Clean up merged hotfix branches
   cleanup-hotfix:
     runs-on: ubuntu-latest
-    if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'hotfix/')
+    needs: check-hotfix-branch
+    if: github.event.pull_request.merged == true && needs.check-hotfix-branch.outputs.is-hotfix == 'true'
     
     steps:
     - name: Delete hotfix branch
