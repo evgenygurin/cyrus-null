@@ -15,7 +15,11 @@
 		"test:packages:run": "pnpm --filter './packages/*' test:run",
 		"test:apps": "pnpm --filter './apps/*' test",
 		"typecheck": "pnpm -r typecheck",
-		"prepare": "husky"
+		"prepare": "husky",
+		"deploy:web-panel": "vercel --cwd apps/web-panel",
+		"deploy:web-panel:prod": "vercel --cwd apps/web-panel --prod",
+		"vercel:build": "cd apps/web-panel && pnpm build",
+		"vercel:install": "pnpm install"
 	},
 	"keywords": [
 		"linear",
