@@ -47,13 +47,13 @@ jobs:
         run: pnpm install
 
       - name: Build packages
-        run: pnpm build --filter=@cyrus/web-panel
+        run: pnpm --filter=@cyrus/web-panel... build
 
       - name: Run tests
         run: pnpm test:packages:run
 
       - name: Type check
-        run: pnpm typecheck --filter=@cyrus/web-panel
+        run: pnpm --filter=@cyrus/web-panel... typecheck
 
       - name: Pull Vercel Environment Information
         run: vercel pull --yes --environment=preview --token=${{ secrets.VERCEL_TOKEN }}
