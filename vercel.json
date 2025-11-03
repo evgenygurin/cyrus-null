@@ -1,0 +1,43 @@
+{
+	"$schema": "https://openapi.vercel.sh/vercel.json",
+	"version": 2,
+	"buildCommand": "cd apps/web-panel && pnpm build",
+	"devCommand": "cd apps/web-panel && pnpm dev",
+	"installCommand": "pnpm install",
+	"framework": "nextjs",
+	"outputDirectory": "apps/web-panel/.next",
+	"git": {
+		"deploymentEnabled": {
+			"main": true,
+			"prod": true,
+			"stage": true
+		}
+	},
+	"env": {
+		"NEXT_PUBLIC_ENABLE_REALTIME": "true",
+		"NEXT_PUBLIC_POLL_INTERVAL": "5000"
+	},
+	"headers": [
+		{
+			"source": "/(.*)",
+			"headers": [
+				{
+					"key": "X-Frame-Options",
+					"value": "SAMEORIGIN"
+				},
+				{
+					"key": "X-Content-Type-Options",
+					"value": "nosniff"
+				},
+				{
+					"key": "X-XSS-Protection",
+					"value": "1; mode=block"
+				},
+				{
+					"key": "Referrer-Policy",
+					"value": "strict-origin-when-cross-origin"
+				}
+			]
+		}
+	]
+}
