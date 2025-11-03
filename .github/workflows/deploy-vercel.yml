@@ -46,8 +46,8 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build packages
-        run: pnpm --filter=@cyrus/web-panel... build
+      - name: Build all packages
+        run: pnpm build
 
       - name: Run tests
         run: pnpm test:packages:run
