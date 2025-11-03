@@ -11,7 +11,11 @@ vi.mock("@anthropic-ai/claude-agent-sdk", () => ({
 // Mock file system with all required methods
 vi.mock("fs", () => ({
 	readFileSync: vi.fn(),
-	existsSync: vi.fn(() => true),
+	existsSync: vi.fn((path: string) => {
+		// .env files don't exist in test environment
+		if (path.endsWith(".env")) return false;
+		return true;
+	}),
 	mkdirSync: vi.fn(),
 	createWriteStream: vi.fn(() => ({
 		write: vi.fn(),
