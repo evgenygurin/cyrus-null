@@ -1,0 +1,143 @@
+name: Branch Management
+
+on:
+  push:
+    branches: [main, stage, prod]
+  pull_request:
+    branches: [main, stage, prod]
+
+jobs:
+  # Run tests on all environment branches
+  test-all-branches:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    
+    strategy:
+      matrix:
+        node-version: [20.x]
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+    
+    - name: Install dependencies
+      uses: ./.github/actions/install-dependencies
+    
+    - name: Create .env file
+      run: |
+        cat > .env << EOF
+        LINEAR_WEBHOOK_SECRET=test
+        WEBHOOK_PORT=3000
+        WORKSPACE_BASE_DIR=./tmp/workspaces
+        PROMPT_TEMPLATE_PATH=./examples/prompt-template.txt
+        ANTHROPIC_API_KEY=test
+        EOF
+    
+    - name: Run Biome
+      run: pnpm biome ci
+    
+    - name: Build Packages
+      run: pnpm build
+    
+    - name: Run Tests
+      run: pnpm -r test:run
+
+  # Validate branch promotion rules
+  validate-promotion:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Validate main -> stage promotion
+      if: github.base_ref == 'stage' && github.head_ref == 'main'
+      run: |
+        echo "✅ Valid promotion: main -> stage"
+        echo "This follows the branch flow: main (dev) -> stage -> prod"
+    
+    - name: Validate stage -> prod promotion
+      if: github.base_ref == 'prod' && github.head_ref == 'stage'
+      run: |
+        echo "✅ Valid promotion: stage -> prod"
+        echo "This follows the branch flow: main (dev) -> stage -> prod"
+    
+    - name: Validate feature -> main promotion
+      if: github.base_ref == 'main' && github.head_ref != 'stage' && github.head_ref != 'prod'
+      run: |
+        echo "✅ Valid promotion: feature branch -> main"
+        echo "Feature branches can be merged into main (development branch)"
+    
+    - name: Block invalid promotions
+      if: |
+        (github.base_ref == 'prod' && github.head_ref != 'stage') ||
+        (github.base_ref == 'stage' && github.head_ref != 'main' && !startsWith(github.head_ref, 'feature/') && !startsWith(github.head_ref, 'hotfix/'))
+      run: |
+        echo "❌ Invalid branch promotion detected!"
+        echo "Base: ${{ github.base_ref }}, Head: ${{ github.head_ref }}"
+        echo ""
+        echo "Valid promotion paths:"
+        echo "- Feature branches -> main"
+        echo "- main -> stage"
+        echo "- stage -> prod"
+        echo "- hotfix/* -> stage (for hotfixes)"
+        echo ""
+        echo "Please follow the branch flow strategy."
+        exit 1
+
+  # Auto-sync development branch after production deployment
+  sync-after-prod-deployment:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/prod' && github.event_name == 'push'
+    needs: [test-all-branches]
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Sync main with prod
+      run: |
+        git config user.name "GitHub Actions Bot"
+        git config user.email "actions@github.com"
+        
+        # Checkout main and merge prod to keep it up to date
+        git checkout main
+        git merge origin/prod --no-edit
+        git push origin main
+        
+        echo "✅ Synced main branch with production changes"
+
+  # Branch protection enforcement
+  enforce-branch-rules:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+    
+    steps:
+    - name: Production branch protection
+      if: github.ref == 'refs/heads/prod'
+      run: |
+        echo "🚀 Production deployment triggered!"
+        echo "Branch: ${{ github.ref_name }}"
+        echo "Commit: ${{ github.sha }}"
+        echo "Author: ${{ github.actor }}"
+    
+    - name: Staging branch update
+      if: github.ref == 'refs/heads/stage'
+      run: |
+        echo "🧪 Staging environment updated!"
+        echo "Branch: ${{ github.ref_name }}"
+        echo "Ready for testing and validation"
+    
+    - name: Development branch update
+      if: github.ref == 'refs/heads/main'
+      run: |
+        echo "🛠️ Development environment updated!"
+        echo "Branch: ${{ github.ref_name }}"
+        echo "New features and changes available for testing"

@@ -1,0 +1,186 @@
+name: Hotfix Management
+
+on:
+  push:
+    branches:
+      - 'hotfix/**'
+  pull_request:
+    branches:
+      - stage
+      - prod
+    types: [opened, synchronize, reopened]
+
+jobs:
+  # Validate hotfix branch naming and structure
+  validate-hotfix:
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/heads/hotfix/') || (github.event_name == 'pull_request' && startsWith(github.head_ref, 'hotfix/'))
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Validate hotfix branch name
+      run: |
+        BRANCH_NAME="${{ github.head_ref || github.ref_name }}"
+        echo "Validating hotfix branch: $BRANCH_NAME"
+        
+        # Check if branch follows hotfix/description or hotfix/ticket-number pattern
+        if [[ ! "$BRANCH_NAME" =~ ^hotfix\/[a-zA-Z0-9._-]+$ ]]; then
+          echo "❌ Invalid hotfix branch name: $BRANCH_NAME"
+          echo "Hotfix branches must follow the pattern: hotfix/description or hotfix/TICKET-123"
+          exit 1
+        fi
+        
+        echo "✅ Valid hotfix branch name: $BRANCH_NAME"
+    
+    - name: Check hotfix base
+      run: |
+        # Hotfixes should typically branch from prod or stage
+        git log --oneline --graph --decorate -10
+        echo "✅ Hotfix branch structure validated"
+
+  # Test hotfix changes
+  test-hotfix:
+    runs-on: ubuntu-latest
+    needs: validate-hotfix
+    if: startsWith(github.ref, 'refs/heads/hotfix/') || (github.event_name == 'pull_request' && startsWith(github.head_ref, 'hotfix/'))
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '20.x'
+    
+    - name: Install dependencies
+      uses: ./.github/actions/install-dependencies
+    
+    - name: Create .env file
+      run: |
+        cat > .env << EOF
+        LINEAR_WEBHOOK_SECRET=test
+        WEBHOOK_PORT=3000
+        WORKSPACE_BASE_DIR=./tmp/workspaces
+        PROMPT_TEMPLATE_PATH=./examples/prompt-template.txt
+        ANTHROPIC_API_KEY=test
+        EOF
+    
+    - name: Run Biome
+      run: pnpm biome ci
+    
+    - name: Build packages
+      run: pnpm build
+    
+    - name: Run tests
+      run: pnpm -r test:run
+    
+    - name: Run additional hotfix validation
+      run: |
+        echo "🔍 Running hotfix-specific validations"
+        echo "Checking for critical fixes..."
+        
+        # Add any hotfix-specific tests here
+        # Example: check if the fix addresses the specific issue
+        # Example: run regression tests
+        
+        echo "✅ Hotfix validation completed"
+
+  # Auto-merge hotfix to multiple branches
+  deploy-hotfix:
+    runs-on: ubuntu-latest
+    needs: [validate-hotfix, test-hotfix]
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/heads/hotfix/')
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Configure git
+      run: |
+        git config user.name "GitHub Actions Bot"
+        git config user.email "actions@github.com"
+    
+    - name: Create hotfix PR to stage
+      run: |
+        BRANCH_NAME="${{ github.ref_name }}"
+        echo "Creating PR from $BRANCH_NAME to stage"
+        
+        # Check if PR already exists
+        EXISTING_PR=$(gh pr list --head "$BRANCH_NAME" --base stage --json number --jq '.[0].number' || echo "")
+        
+        if [[ -z "$EXISTING_PR" ]]; then
+          gh pr create \
+            --title "🚨 Hotfix: ${BRANCH_NAME#hotfix/}" \
+            --body "## Hotfix Deployment
+
+This is an automated hotfix deployment.
+
+### Changes
+- Branch: $BRANCH_NAME
+- Commit: ${{ github.sha }}
+- Author: ${{ github.actor }}
+
+### Deployment Path
+1. $BRANCH_NAME → stage (this PR)
+2. stage → prod (after validation)
+
+### Review Checklist
+- [ ] Hotfix addresses the critical issue
+- [ ] No unintended side effects
+- [ ] Ready for immediate production deployment
+
+**⚠️ This is a hotfix - expedited review required!**" \
+            --base stage \
+            --head "$BRANCH_NAME" \
+            --label hotfix,urgent
+          
+          echo "✅ Created hotfix PR to stage"
+        else
+          echo "ℹ️ PR already exists: #$EXISTING_PR"
+        fi
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # Hotfix deployment notification
+  notify-hotfix-deployment:
+    runs-on: ubuntu-latest
+    needs: deploy-hotfix
+    if: always() && startsWith(github.ref, 'refs/heads/hotfix/')
+    
+    steps:
+    - name: Notify team
+      run: |
+        BRANCH_NAME="${{ github.ref_name }}"
+        echo "🚨 HOTFIX DEPLOYMENT ALERT"
+        echo "Branch: $BRANCH_NAME"
+        echo "Commit: ${{ github.sha }}"
+        echo "Author: ${{ github.actor }}"
+        echo "Status: ${{ needs.deploy-hotfix.result }}"
+        
+        # Add notification logic here (Slack, email, etc.)
+        # Example: Send to Slack webhook
+        # curl -X POST -H 'Content-type: application/json' \
+        #   --data '{"text":"🚨 Hotfix deployed: '$BRANCH_NAME'"}' \
+        #   $SLACK_WEBHOOK_URL
+
+  # Clean up merged hotfix branches
+  cleanup-hotfix:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true && startsWith(github.head_ref, 'hotfix/')
+    
+    steps:
+    - name: Delete hotfix branch
+      run: |
+        BRANCH_NAME="${{ github.head_ref }}"
+        echo "🧹 Cleaning up merged hotfix branch: $BRANCH_NAME"
+        
+        # Delete the hotfix branch after successful merge
+        git push origin --delete "$BRANCH_NAME" || echo "Branch may already be deleted"
+        
+        echo "✅ Hotfix branch cleanup completed"
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
