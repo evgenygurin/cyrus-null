@@ -136,24 +136,24 @@ jobs:
           gh pr create \
             --title "🚨 Hotfix: ${BRANCH_NAME#hotfix/}" \
             --body "## Hotfix Deployment
-
-This is an automated hotfix deployment.
-
-### Changes
-- Branch: $BRANCH_NAME
-- Commit: ${{ github.sha }}
-- Author: ${{ github.actor }}
-
-### Deployment Path
-1. $BRANCH_NAME → stage (this PR)
-2. stage → prod (after validation)
-
-### Review Checklist
-- [ ] Hotfix addresses the critical issue
-- [ ] No unintended side effects
-- [ ] Ready for immediate production deployment
-
-**⚠️ This is a hotfix - expedited review required!**" \
+        
+        This is an automated hotfix deployment.
+        
+        ### Changes
+        - Branch: $BRANCH_NAME
+        - Commit: ${{ github.sha }}
+        - Author: ${{ github.actor }}
+        
+        ### Deployment Path
+        1. $BRANCH_NAME → stage (this PR)
+        2. stage → prod (after validation)
+        
+        ### Review Checklist
+        - [ ] Hotfix addresses the critical issue
+        - [ ] No unintended side effects
+        - [ ] Ready for immediate production deployment
+        
+        **⚠️ This is a hotfix - expedited review required!**" \
             --base stage \
             --head "$BRANCH_NAME" \
             --label hotfix,urgent
