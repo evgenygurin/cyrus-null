@@ -28,6 +28,18 @@ This panel is optimized to run in Codegen's sandbox environment on port 3000.
    - The panel will be available at the Codegen proxy URL
    - Automatically uses `CG_PREVIEW_URL` environment variable
 
+### Deploy to Vercel
+
+Deploy the web panel to Vercel in 3 steps:
+
+1. **Import Project**: Go to [vercel.com/new](https://vercel.com/new) and import your repository
+2. **Set Root Directory**: Set "Root Directory" to `apps/web-panel`
+3. **Deploy**: Click "Deploy" - Vercel will auto-detect Next.js settings
+
+Your dashboard will be live at `https://your-project.vercel.app`
+
+📖 **Detailed deployment guide**: See [VERCEL_DEPLOY.md](./VERCEL_DEPLOY.md)
+
 ### Local Development
 
 ```bash

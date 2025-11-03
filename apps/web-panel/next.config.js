@@ -3,22 +3,17 @@ const nextConfig = {
 	reactStrictMode: true,
 	poweredByHeader: false,
 
-	// Optimize for sandbox environment
+	// Optimize for production and sandbox environment
 	experimental: {
 		optimizePackageImports: ["lucide-react", "date-fns"],
 	},
 
-	// Disable telemetry in sandbox
-	telemetry: false,
-
-	// Server configuration for Codegen sandbox
-	serverRuntimeConfig: {
-		port: 3000,
-	},
-
 	// Environment variable for preview URL
 	env: {
-		PREVIEW_URL: process.env.CG_PREVIEW_URL || "http://localhost:3000",
+		PREVIEW_URL:
+			process.env.CG_PREVIEW_URL ||
+			process.env.VERCEL_URL ||
+			"http://localhost:3000",
 	},
 };
 
