@@ -25,6 +25,11 @@ pids
 # Test coverage
 coverage/
 
+# Build outputs for apps (not packages)
+apps/**/dist/
+apps/**/.next/
+apps/**/out/
+
 # OS-specific files
 .DS_Store
 Thumbs.db
