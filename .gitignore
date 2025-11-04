@@ -1,6 +1,9 @@
 # Dependency directories
 node_modules/
 
+# Build output directories
+dist/
+
 tempdocs
 
 # Environment variables
