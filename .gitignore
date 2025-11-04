@@ -25,6 +25,10 @@ pids
 # Test coverage
 coverage/
 
+# Build output
+dist/
+build/
+
 # OS-specific files
 .DS_Store
 Thumbs.db
