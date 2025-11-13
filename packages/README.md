@@ -4,6 +4,20 @@ This directory contains the core packages that make up the Cyrus monorepo. Each 
 
 ## Package Overview
 
+### @cyrus/apollo-server
+**Scope**: GraphQL Apollo Server integration for Linear API
+
+**Responsibilities**:
+- Provide GraphQL API layer for Linear operations
+- Handle Apollo Server federation and schema composition
+- Manage Linear API authentication and authorization
+- Enable GraphQL-based Linear operations
+
+**Key Exports**:
+- Apollo Server configuration
+- GraphQL schema definitions
+- Linear resolvers and data sources
+
 ### @cyrus/core
 **Scope**: Core domain models and business logic entities
 
@@ -19,22 +33,6 @@ This directory contains the core packages that make up the Cyrus monorepo. Each 
 - `Issue` - Linear issue model
 - `Workspace` - Working directory model
 - `Comment` - Issue comment model
-
-### @cyrus/claude-parser
-**Scope**: Parse and interpret Claude's stdout/stderr output
-
-**Responsibilities**:
-- Parse Claude's JSON-formatted stdout messages
-- Handle streaming JSON parsing (incomplete messages)
-- Emit typed events for different message types
-- Extract content from assistant responses
-- Parse tool use events and errors
-
-**Key Exports**:
-- `StdoutParser` - Main parser class
-- `StreamProcessor` - Handles streaming data
-- `ClaudeEvent` - TypeScript types for all Claude events
-- Message type definitions
 
 ### @cyrus/claude-runner
 **Scope**: Manage Claude CLI process lifecycle
@@ -52,6 +50,20 @@ This directory contains the core packages that make up the Cyrus monorepo. Each 
 - `getAllTools()` - List available Claude tools
 - Process configuration types
 
+### @cyrus/linear-webhook-client
+**Scope**: Linear webhook event handling and processing
+
+**Responsibilities**:
+- Receive and parse Linear webhook events
+- Validate webhook signatures
+- Transform webhook payloads into typed events
+- Handle various Linear webhook event types
+
+**Key Exports**:
+- `LinearWebhookClient` - Main webhook handler
+- Webhook event types and interfaces
+- Webhook validation utilities
+
 ### @cyrus/ndjson-client
 **Scope**: NDJSON streaming communication with edge proxy
 
@@ -68,6 +80,20 @@ This directory contains the core packages that make up the Cyrus monorepo. Each 
 - `WebhookEvent` - Webhook event types
 - `StatusUpdate` - Status update types
 - Configuration interfaces
+
+### @cyrus/simple-agent-runner
+**Scope**: Simplified agent runner for basic use cases
+
+**Responsibilities**:
+- Provide a simplified API for running agent tasks
+- Abstract away complex orchestration logic
+- Support basic agent workflows
+- Easy integration for simple use cases
+
+**Key Exports**:
+- `SimpleAgentRunner` - Simplified runner class
+- Basic configuration interfaces
+- Common agent patterns
 
 ### @cyrus/edge-worker
 **Scope**: Orchestrate Linear webhooks, Claude processing, and API responses
@@ -91,19 +117,26 @@ This directory contains the core packages that make up the Cyrus monorepo. Each 
 ```
 @cyrus/edge-worker
   ├── @cyrus/core (Session, SessionManager)
-  ├── @cyrus/claude-parser (ClaudeEvent types)
   ├── @cyrus/claude-runner (ClaudeRunner)
   ├── @cyrus/ndjson-client (NdjsonClient)
+  ├── @cyrus/simple-agent-runner (SimpleAgentRunner)
   └── @linear/sdk (Linear API)
 
+@cyrus/simple-agent-runner
+  └── @cyrus/claude-runner (ClaudeRunner)
+
 @cyrus/claude-runner
-  └── @cyrus/claude-parser (for event types)
+  └── (external dependencies only)
+
+@cyrus/linear-webhook-client
+  └── @linear/sdk (Linear API)
 
 @cyrus/ndjson-client
   └── (no internal dependencies)
 
-@cyrus/claude-parser
-  └── (no internal dependencies)
+@cyrus/apollo-server
+  ├── @linear/sdk (Linear API)
+  └── @apollo/server
 
 @cyrus/core
   └── (no internal dependencies)
@@ -120,6 +153,7 @@ This directory contains the core packages that make up the Cyrus monorepo. Each 
 
 ## Usage in Apps
 
-- **CLI App**: Uses all packages to provide a command-line interface
-- **Electron App**: Uses edge-worker package for the main functionality
+- **CLI App** (`apps/cli`): Uses all packages to provide a command-line interface
+- **Proxy Worker** (`apps/proxy-worker`): Cloudflare Worker handling OAuth and webhooks
+- **Web Panel** (`apps/web-panel`): Next.js control panel for monitoring and management
 - **Future Apps**: Can pick and choose packages based on needs
