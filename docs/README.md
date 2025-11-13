@@ -6,6 +6,16 @@
 
 ## 🎯 Начните здесь
 
+### Для быстрого старта
+
+**[quick-reference.md](./quick-reference.md)** 🚀 **QUICK REFERENCE**
+
+- Common commands and operations
+- Configuration examples
+- Troubleshooting guide
+- Key file locations
+- Development workflow
+
 ### Для быстрого понимания всей системы
 
 **[UNIFIED_ARCHITECTURE.md](./UNIFIED_ARCHITECTURE.md)** ⭐ **ГЛАВНЫЙ ДОКУМЕНТ**
@@ -73,25 +83,28 @@
 
 ### Для Product Managers
 
-1. ⭐ [UNIFIED_ARCHITECTURE.md](./UNIFIED_ARCHITECTURE.md) - общее видение
-2. 📋 [INTEGRATION_SUMMARY.md](./INTEGRATION_SUMMARY.md) - что было объединено и почему
-3. 🎨 [CONTROL_PANEL_UI_SPECS.md](./CONTROL_PANEL_UI_SPECS.md) - UI/UX
-4. 📊 [refactor/TEAM_BRIEFING.md](../refactor/TEAM_BRIEFING.md) - краткий брифинг
+1. 🚀 [quick-reference.md](./quick-reference.md) - quick start guide
+2. ⭐ [UNIFIED_ARCHITECTURE.md](./UNIFIED_ARCHITECTURE.md) - общее видение
+3. 📋 [INTEGRATION_SUMMARY.md](./INTEGRATION_SUMMARY.md) - что было объединено и почему
+4. 🎨 [CONTROL_PANEL_UI_SPECS.md](./CONTROL_PANEL_UI_SPECS.md) - UI/UX
+5. 📊 [refactor/TEAM_BRIEFING.md](../refactor/TEAM_BRIEFING.md) - краткий брифинг
 
 ### Для Backend Developers
 
-1. ⭐ [UNIFIED_ARCHITECTURE.md](./UNIFIED_ARCHITECTURE.md) - полная картина
-2. 🔧 [refactor/CODEGEN_INTEGRATION_PLAN.md](../refactor/CODEGEN_INTEGRATION_PLAN.md) - implementation plan
-3. 📐 [refactor/CODEGEN_ARCHITECTURE_DIAGRAMS.md](../refactor/CODEGEN_ARCHITECTURE_DIAGRAMS.md) - диаграммы
-4. 🎯 [refactor/ORCHESTRATOR_CODEGEN_ALIGNMENT.md](../refactor/ORCHESTRATOR_CODEGEN_ALIGNMENT.md) - orchestrator changes
-5. 🗄️ [CONTROL_PANEL_ARCHITECTURE.md](./CONTROL_PANEL_ARCHITECTURE.md) (Section: Database) - schema
+1. 🚀 [quick-reference.md](./quick-reference.md) - common commands & troubleshooting
+2. ⭐ [UNIFIED_ARCHITECTURE.md](./UNIFIED_ARCHITECTURE.md) - полная картина
+3. 🔧 [refactor/CODEGEN_INTEGRATION_PLAN.md](../refactor/CODEGEN_INTEGRATION_PLAN.md) - implementation plan
+4. 📐 [refactor/CODEGEN_ARCHITECTURE_DIAGRAMS.md](../refactor/CODEGEN_ARCHITECTURE_DIAGRAMS.md) - диаграммы
+5. 🎯 [refactor/ORCHESTRATOR_CODEGEN_ALIGNMENT.md](../refactor/ORCHESTRATOR_CODEGEN_ALIGNMENT.md) - orchestrator changes
+6. 🗄️ [CONTROL_PANEL_ARCHITECTURE.md](./CONTROL_PANEL_ARCHITECTURE.md) (Section: Database) - schema
 
 ### Для Frontend Developers
 
-1. 🎨 [CONTROL_PANEL_UI_SPECS.md](./CONTROL_PANEL_UI_SPECS.md) - UI/UX specs
-2. 🏗️ [CONTROL_PANEL_ARCHITECTURE.md](./CONTROL_PANEL_ARCHITECTURE.md) - Next.js architecture
-3. 📝 [CONTROL_PANEL_IMPLEMENTATION.md](./CONTROL_PANEL_IMPLEMENTATION.md) - implementation guide
-4. ⭐ [UNIFIED_ARCHITECTURE.md](./UNIFIED_ARCHITECTURE.md) (Section 1-2) - UI layer overview
+1. 🚀 [quick-reference.md](./quick-reference.md) - quick start & commands
+2. 🎨 [CONTROL_PANEL_UI_SPECS.md](./CONTROL_PANEL_UI_SPECS.md) - UI/UX specs
+3. 🏗️ [CONTROL_PANEL_ARCHITECTURE.md](./CONTROL_PANEL_ARCHITECTURE.md) - Next.js architecture
+4. 📝 [CONTROL_PANEL_IMPLEMENTATION.md](./CONTROL_PANEL_IMPLEMENTATION.md) - implementation guide
+5. ⭐ [UNIFIED_ARCHITECTURE.md](./UNIFIED_ARCHITECTURE.md) (Section 1-2) - UI layer overview
 
 ### Для DevOps Engineers
 

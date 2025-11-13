@@ -35,17 +35,19 @@ The codebase follows a pnpm monorepo structure:
 cyrus/
 ├── apps/
 │   ├── cli/          # Main CLI application
-│   ├── electron/     # Future Electron GUI (in development)
-│   └── proxy/        # Edge proxy server for OAuth/webhooks
+│   ├── proxy-worker/ # Cloudflare Worker for OAuth/webhooks
+│   └── web-panel/    # Next.js control panel UI
 └── packages/
-    ├── core/         # Shared types and session management
-    ├── claude-parser/# Claude stdout parsing with jq
-    ├── claude-runner/# Claude CLI execution wrapper
-    ├── edge-worker/  # Edge worker client implementation
-    └── ndjson-client/# NDJSON streaming client
+    ├── apollo-server/        # GraphQL Apollo Server integration
+    ├── claude-runner/        # Claude CLI execution wrapper
+    ├── core/                 # Shared types and session management
+    ├── edge-worker/          # Edge worker client implementation
+    ├── linear-webhook-client/# Linear webhook handling
+    ├── ndjson-client/        # NDJSON streaming client
+    └── simple-agent-runner/  # Simplified agent runner
 ```
 
-For a detailed visual representation of how these components interact and map Claude Code sessions to Linear comment threads, see @architecture.md.
+For a detailed visual representation of how these components interact and map Claude Code sessions to Linear comment threads, see [docs/UNIFIED_ARCHITECTURE.md](docs/UNIFIED_ARCHITECTURE.md) and [docs/service-dependency-graph.md](docs/service-dependency-graph.md).
 
 ## Common Commands
 
@@ -95,19 +97,7 @@ pnpm install -g .            # Install local version globally
 pnpm link -g .               # Link local development version
 ```
 
-#### Electron App (`apps/electron/`)
-```bash
-# Development mode
-pnpm dev
-
-# Build for production
-pnpm build:all
-
-# Run electron in dev mode
-pnpm electron:dev
-```
-
-#### Proxy App (`apps/proxy/`)
+#### Proxy Worker (`apps/proxy-worker/`)
 ```bash
 # Start proxy server
 pnpm start
@@ -148,9 +138,9 @@ The agent automatically moves issues to the "started" state when assigned. Linea
 1. **Edge-Proxy Architecture**: The project is transitioning to separate OAuth/webhook handling from Claude processing.
 
 2. **Dependencies**: 
-   - The claude-parser package requires `jq` to be installed on the system
    - Uses pnpm as package manager (v10.11.0)
-   - TypeScript for all new packages
+   - TypeScript for all packages
+   - Node.js 18+ required
 
 3. **Git Worktrees**: When processing issues, the agent creates separate git worktrees. If a `cyrus-setup.sh` script exists in the repository root, it's executed in new worktrees for project-specific initialization.
 
@@ -178,11 +168,14 @@ When working on this codebase, follow these practices:
 
 ## Key Code Paths
 
-- **Linear Integration**: `apps/cli/services/LinearIssueService.mjs`
+- **CLI Application**: `apps/cli/src/application/`
+- **Configuration Service**: `apps/cli/src/application/services/ConfigService.ts`
 - **Claude Execution**: `packages/claude-runner/src/ClaudeRunner.ts`
-- **Session Management**: `packages/core/src/session/`
+- **Core Domain**: `packages/core/src/domain/`
+- **Session Management**: `packages/core/src/application/services/`
 - **Edge Worker**: `packages/edge-worker/src/EdgeWorker.ts`
-- **OAuth Flow**: `apps/proxy/src/services/OAuthService.mjs`
+- **OAuth Flow**: `apps/proxy-worker/src/services/OAuthService.ts`
+- **Apollo Server**: `packages/apollo-server/src/`
 
 ## Testing MCP Linear Integration
 
