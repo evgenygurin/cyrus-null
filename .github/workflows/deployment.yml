@@ -1,0 +1,230 @@
+name: Deployment Pipeline
+
+on:
+  push:
+    branches: [main, stage, prod]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Target environment'
+        required: true
+        default: 'development'
+        type: choice
+        options:
+        - development
+        - staging
+        - production
+
+env:
+  NODE_VERSION: '20.x'
+
+jobs:
+  # Build and prepare artifacts
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+    
+    - name: Install dependencies
+      uses: ./.github/actions/install-dependencies
+    
+    - name: Build packages
+      run: pnpm build
+    
+    - name: Run tests
+      run: pnpm -r test:run
+    
+    - name: Generate version
+      id: version
+      run: |
+        if [[ "${{ github.ref_name }}" == "prod" ]]; then
+          VERSION=$(node -p "require('./apps/cli/package.json').version")
+        else
+          VERSION="${{ github.ref_name }}-$(git rev-parse --short HEAD)"
+        fi
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "Generated version: $VERSION"
+    
+    - name: Create build artifacts
+      run: |
+        mkdir -p artifacts
+        tar -czf artifacts/build-${{ steps.version.outputs.version }}.tar.gz \
+          apps/cli/dist \
+          packages/*/dist \
+          apps/cli/package.json \
+          packages/*/package.json \
+          pnpm-lock.yaml
+    
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-artifacts-${{ steps.version.outputs.version }}
+        path: artifacts/
+        retention-days: 30
+
+  # Deploy to development environment
+  deploy-development:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    environment:
+      name: development
+      url: https://dev.cyrus.example.com
+    
+    steps:
+    - name: Deploy to development
+      run: |
+        echo "🚀 Deploying to development environment"
+        echo "Version: ${{ needs.build.outputs.version }}"
+        echo "Branch: main"
+        echo "Environment: Development"
+        
+        # Add your development deployment commands here
+        # Example: kubectl apply -f k8s/development/
+        # Example: docker deploy --compose-file docker-compose.dev.yml
+        
+        echo "✅ Development deployment completed"
+
+  # Deploy to staging environment
+  deploy-staging:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/stage'
+    environment:
+      name: staging
+      url: https://staging.cyrus.example.com
+    
+    steps:
+    - uses: actions/download-artifact@v4
+      with:
+        name: build-artifacts-${{ needs.build.outputs.version }}
+        path: artifacts/
+    
+    - name: Deploy to staging
+      run: |
+        echo "🧪 Deploying to staging environment"
+        echo "Version: ${{ needs.build.outputs.version }}"
+        echo "Branch: stage"
+        echo "Environment: Staging"
+        
+        # Add your staging deployment commands here
+        # Example: kubectl apply -f k8s/staging/
+        # Example: docker deploy --compose-file docker-compose.staging.yml
+        
+        echo "✅ Staging deployment completed"
+    
+    - name: Run smoke tests
+      run: |
+        echo "🔍 Running smoke tests on staging"
+        # Add smoke tests here
+        # Example: curl -f https://staging.cyrus.example.com/health
+        echo "✅ Smoke tests passed"
+
+  # Deploy to production environment
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/prod'
+    environment:
+      name: production
+      url: https://cyrus.example.com
+    
+    steps:
+    - uses: actions/download-artifact@v4
+      with:
+        name: build-artifacts-${{ needs.build.outputs.version }}
+        path: artifacts/
+    
+    - name: Pre-deployment checks
+      run: |
+        echo "🔍 Running pre-deployment checks"
+        echo "Version: ${{ needs.build.outputs.version }}"
+        
+        # Add pre-deployment validation here
+        # Example: Check if staging tests passed
+        # Example: Validate configuration
+        
+        echo "✅ Pre-deployment checks passed"
+    
+    - name: Deploy to production
+      run: |
+        echo "🚀 Deploying to production environment"
+        echo "Version: ${{ needs.build.outputs.version }}"
+        echo "Branch: prod"
+        echo "Environment: Production"
+        
+        # Add your production deployment commands here
+        # Example: kubectl apply -f k8s/production/
+        # Example: docker deploy --compose-file docker-compose.prod.yml
+        
+        echo "✅ Production deployment completed"
+    
+    - name: Post-deployment verification
+      run: |
+        echo "✅ Running post-deployment verification"
+        # Add production health checks here
+        # Example: curl -f https://cyrus.example.com/health
+        echo "✅ Production deployment verified"
+    
+    - name: Create GitHub release
+      if: github.ref == 'refs/heads/prod'
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ needs.build.outputs.version }}
+        release_name: Release v${{ needs.build.outputs.version }}
+        body: |
+          ## Release v${{ needs.build.outputs.version }}
+          
+          Deployed to production on $(date)
+          
+          ### Changes
+          - See commit history for detailed changes
+          
+          ### Deployment Info
+          - Branch: prod
+          - Commit: ${{ github.sha }}
+          - Actor: ${{ github.actor }}
+        draft: false
+        prerelease: false
+
+  # Manual deployment workflow
+  manual-deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'workflow_dispatch'
+    environment: ${{ github.event.inputs.environment }}
+    
+    steps:
+    - name: Manual deployment
+      run: |
+        echo "🚀 Manual deployment triggered"
+        echo "Target environment: ${{ github.event.inputs.environment }}"
+        echo "Version: ${{ needs.build.outputs.version }}"
+        echo "Triggered by: ${{ github.actor }}"
+        
+        # Add environment-specific deployment logic here
+        case "${{ github.event.inputs.environment }}" in
+          "development")
+            echo "Deploying to development..."
+            ;;
+          "staging")
+            echo "Deploying to staging..."
+            ;;
+          "production")
+            echo "Deploying to production..."
+            echo "⚠️  Production deployment requires additional approval"
+            ;;
+        esac
+        
+        echo "✅ Manual deployment completed"

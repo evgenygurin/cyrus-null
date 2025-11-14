@@ -27,70 +27,128 @@ export default function Dashboard() {
 
 	const fetchDashboardData = useCallback(async () => {
 		try {
-			// Simulate API calls - replace with actual API endpoints
+			// Dynamic demo data that changes over time
+			const now = Date.now();
+			const minute = Math.floor(now / 60000) % 10; // Changes every minute
+
+			// Generate dynamic stats with some variance
+			const baseTotal = 42 + minute;
+			const baseActive = Math.max(1, 3 + (minute % 3) - 1);
+			const baseSuccess = 85 + (minute % 10);
+			const baseDuration = 320 + minute * 15;
+
 			const mockStats: Stats = {
-				totalSessions: 42,
-				activeSessions: 3,
-				successRate: 87.5,
-				avgDuration: 324,
+				totalSessions: baseTotal,
+				activeSessions: baseActive,
+				successRate: baseSuccess,
+				avgDuration: baseDuration,
 			};
+
+			// Dynamic session activities
+			const activities = [
+				"Analyzing code structure",
+				"Reading documentation",
+				"Writing unit tests",
+				"Executing bash command",
+				"Creating pull request",
+				"Running tests",
+				"Updating dependencies",
+				"Fixing merge conflicts",
+				"Reviewing code",
+				"Deploying changes",
+			];
+
+			const repositories = [
+				"backend-api",
+				"frontend-app",
+				"mobile-app",
+				"docs-site",
+				"auth-service",
+			];
+			const currentActivity = activities[minute % activities.length];
 
 			const mockSessions: Session[] = [
 				{
 					id: "1",
 					issueId: "CYR-123",
-					issueTitle: "Fix authentication bug",
-					repository: "backend-api",
-					status: "active",
-					startedAt: new Date(Date.now() - 300000).toISOString(),
-					currentActivity: "Executing bash command",
+					issueTitle: "Fix authentication bug in JWT handler",
+					repository: repositories[0],
+					status: minute % 2 === 0 ? "active" : "thinking",
+					startedAt: new Date(now - 300000 - minute * 30000).toISOString(),
+					currentActivity: currentActivity,
 				},
 				{
 					id: "2",
 					issueId: "CYR-124",
-					issueTitle: "Add user profile feature",
-					repository: "frontend-app",
-					status: "thinking",
-					startedAt: new Date(Date.now() - 600000).toISOString(),
-					currentActivity: "Analyzing code structure",
+					issueTitle: "Add user profile management feature",
+					repository: repositories[1],
+					status: minute % 3 === 0 ? "paused" : "active",
+					startedAt: new Date(now - 600000 - minute * 45000).toISOString(),
+					currentActivity: activities[(minute + 1) % activities.length],
 				},
-				{
-					id: "3",
-					issueId: "CYR-125",
-					issueTitle: "Optimize database queries",
-					repository: "backend-api",
-					status: "active",
-					startedAt: new Date(Date.now() - 900000).toISOString(),
-					currentActivity: "Running tests",
-				},
-			];
+				baseActive >= 3
+					? {
+							id: "3",
+							issueId: "CYR-125",
+							issueTitle: "Optimize database query performance",
+							repository: repositories[2],
+							status: "active",
+							startedAt: new Date(now - 900000 - minute * 20000).toISOString(),
+							currentActivity: activities[(minute + 2) % activities.length],
+						}
+					: null,
+				baseActive >= 4
+					? {
+							id: "4",
+							issueId: "CYR-126",
+							issueTitle: "Implement real-time notifications",
+							repository: repositories[3],
+							status: "thinking",
+							startedAt: new Date(now - 1200000).toISOString(),
+							currentActivity: "Planning implementation approach",
+						}
+					: null,
+			].filter(Boolean) as Session[];
 
+			// Dynamic activity feed
 			const mockActivities: ActivityEvent[] = [
 				{
-					id: "1",
+					id: `activity-${minute}`,
 					type: "session_start",
-					message: "Started working on CYR-123: Fix authentication bug",
-					timestamp: new Date(Date.now() - 300000).toISOString(),
+					message: `Started working on CYR-${123 + minute}: ${mockSessions[0]?.issueTitle || "New task"}`,
+					timestamp: new Date(now - minute * 60000).toISOString(),
 				},
+				minute > 2
+					? {
+							id: `activity-${minute - 1}`,
+							type: "pr_created",
+							message: `Created PR #${45 + minute}: Implement feature improvements`,
+							timestamp: new Date(now - (minute + 1) * 60000).toISOString(),
+						}
+					: null,
+				minute > 4
+					? {
+							id: `activity-${minute - 2}`,
+							type: "session_complete",
+							message: `Completed CYR-${120 + (minute - 2)}: Update system documentation`,
+							timestamp: new Date(now - (minute + 2) * 60000).toISOString(),
+						}
+					: null,
+				minute > 6 && minute % 4 === 0
+					? {
+							id: `activity-${minute - 3}`,
+							type: "error",
+							message: `Session requires attention for CYR-${119 + (minute - 3)}: Build error detected`,
+							timestamp: new Date(now - (minute + 3) * 60000).toISOString(),
+						}
+					: null,
 				{
-					id: "2",
-					type: "pr_created",
-					message: "Created PR #45: Implement OAuth2 flow",
-					timestamp: new Date(Date.now() - 600000).toISOString(),
-				},
-				{
-					id: "3",
+					id: `activity-old-${minute}`,
 					type: "session_complete",
-					message: "Completed CYR-120: Update documentation",
-					timestamp: new Date(Date.now() - 900000).toISOString(),
+					message: `Completed CYR-${100 + minute}: Previous task finished successfully`,
+					timestamp: new Date(now - (minute + 5) * 60000).toISOString(),
 				},
-				{
-					id: "4",
-					type: "error",
-					message: "Session failed for CYR-119: Build error detected",
-					timestamp: new Date(Date.now() - 1200000).toISOString(),
-				},
-			];
+			].filter(Boolean) as ActivityEvent[];
 
 			setStats(mockStats);
 			setSessions(mockSessions);
@@ -106,8 +164,8 @@ export default function Dashboard() {
 		// Fetch initial data
 		fetchDashboardData();
 
-		// Setup polling for real-time updates
-		const interval = setInterval(fetchDashboardData, 5000);
+		// Setup polling for real-time updates (every 3 seconds for demo)
+		const interval = setInterval(fetchDashboardData, 3000);
 
 		return () => clearInterval(interval);
 	}, [fetchDashboardData]);
