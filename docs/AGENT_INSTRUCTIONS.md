@@ -1588,7 +1588,7 @@ async function ensureSessionValid(session: Session) {
     await linear.agentActivityCreate({
       sessionId: newSession.session!.id,
       type: 'thought',
-      body: `🔄 Continued from [previous session](${getSessionUrl(session.id)})`,
+      body: `🔄 Continued from previous session (${session.id})`,
     });
     
     return newSession.session!;
