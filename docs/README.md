@@ -240,6 +240,7 @@
 ### Related Files
 
 - **Root CLAUDE.md**: Инструкции для Claude Code при работе с кодом
+- **AGENT_INSTRUCTIONS.md**: Comprehensive step-by-step guidelines for AI agents
 - **CHANGELOG.md**: История изменений проекта
 - **architecture.md**: Детальная архитектура системы (если существует)
 

@@ -13,7 +13,21 @@ Cyrus (Linear Claude Agent) is a monorepo JavaScript/TypeScript application that
 - Posts responses back to Linear as comments
 - Maintains conversation continuity using the `--continue` flag
 - Supports edge worker mode for distributed processing
-Here's a refined version of your message:
+
+## Agent Guidelines
+
+For comprehensive step-by-step instructions on working with this codebase as an AI agent, see **[docs/AGENT_INSTRUCTIONS.md](docs/AGENT_INSTRUCTIONS.md)**. This document covers:
+
+- Core principles and communication style
+- Code investigation workflows
+- Tool usage best practices
+- Prompt engineering guidelines
+- Error handling patterns
+- Testing requirements
+- Documentation standards
+- Integration guidelines (Linear, Codegen, GitHub)
+
+**Quick Reference**: Always read files before answering questions about them. Never speculate about code you haven't opened.
 
 ## Working with SDKs
 
