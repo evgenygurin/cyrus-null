@@ -3,6 +3,11 @@ node_modules/
 
 tempdocs
 
+# Build output and distribution files
+dist/
+build/
+*.tsbuildinfo
+
 # Environment variables
 .env
 .env.*
