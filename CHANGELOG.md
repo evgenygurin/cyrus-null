@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- **Multi-Agent Platform Integration**: Expanded agent support beyond Claude Code to include Codegen and Cursor
+  - Platform comparison table showing execution models, use cases, and cost structures
+  - Codegen cloud-based agent integration with PR review, CI/CD checks auto-fixing, and sandbox execution
+  - Cursor IDE-integrated agent capabilities with background agents API
+  - Four multi-agent coordination patterns: Sequential Handoff, Parallel Execution, Review Loop, and Specialized Routing
+  - Agent communication protocol for transparent collaboration through Linear comments
+  - Environment variable structure for multi-platform support
+  - Security and cost management best practices
+
 - **Phase 1 Refactoring Foundation**: Implemented foundational architecture for codebase modernization
   - Added error hierarchy with typed errors (ConfigError, OAuthError, GitError, SubscriptionError, ValidationError)
   - Created domain value objects (LinearToken, StripeCustomerId) with built-in validation
@@ -17,6 +26,14 @@ All notable changes to this project will be documented in this file.
   - Added comprehensive unit tests for all new components (19 new tests)
 
 ### Documentation
+- **Multi-Agent Platform Guide**: Comprehensive documentation for working with multiple AI agent platforms
+  - Updated CLAUDE.md with detailed integration guides for Codegen and Cursor
+  - Added API integration examples with code snippets for all three platforms
+  - Documented webhook configuration for agent run notifications
+  - Created .cursorrules template with project-specific conventions
+  - Added sandbox configuration examples for Codegen
+  - Multi-agent coordination patterns with real-world examples
+
 - **Architecture and refactoring documentation**: Comprehensive analysis and planning for codebase refactoring
   - Created REFACTORING_SUMMARY.md with executive summary and metrics
   - Created REFACTORING_PLAN.md with detailed 6-phase implementation plan
