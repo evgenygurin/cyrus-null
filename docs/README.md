@@ -28,6 +28,19 @@
 
 ## 📚 Документация по областям
 
+### Agent Instructions (Comprehensive Guide)
+
+**[AGENT_INSTRUCTIONS.md](./AGENT_INSTRUCTIONS.md)** 🤖 **STEP-BY-STEP GUIDE FOR AGENTS**
+
+- Complete workflow documentation based on Linear and Codegen docs
+- Linear Agent Interaction Guidelines (AIG) implementation
+- GraphQL API usage patterns and examples
+- TypeScript SDK integration examples
+- Codegen cloud execution procedures
+- Step-by-step procedures for all scenarios
+- Error handling and recovery strategies
+- Real-world examples and code snippets
+
 ### Control Panel (Next.js Web UI)
 
 Документация по веб-интерфейсу для управления и мониторинга Cyrus агентов.
@@ -81,10 +94,11 @@
 ### Для Backend Developers
 
 1. ⭐ [UNIFIED_ARCHITECTURE.md](./UNIFIED_ARCHITECTURE.md) - полная картина
-2. 🔧 [refactor/CODEGEN_INTEGRATION_PLAN.md](../refactor/CODEGEN_INTEGRATION_PLAN.md) - implementation plan
-3. 📐 [refactor/CODEGEN_ARCHITECTURE_DIAGRAMS.md](../refactor/CODEGEN_ARCHITECTURE_DIAGRAMS.md) - диаграммы
-4. 🎯 [refactor/ORCHESTRATOR_CODEGEN_ALIGNMENT.md](../refactor/ORCHESTRATOR_CODEGEN_ALIGNMENT.md) - orchestrator changes
-5. 🗄️ [CONTROL_PANEL_ARCHITECTURE.md](./CONTROL_PANEL_ARCHITECTURE.md) (Section: Database) - schema
+2. 🤖 [AGENT_INSTRUCTIONS.md](./AGENT_INSTRUCTIONS.md) - agent workflows and integration
+3. 🔧 [refactor/CODEGEN_INTEGRATION_PLAN.md](../refactor/CODEGEN_INTEGRATION_PLAN.md) - implementation plan
+4. 📐 [refactor/CODEGEN_ARCHITECTURE_DIAGRAMS.md](../refactor/CODEGEN_ARCHITECTURE_DIAGRAMS.md) - диаграммы
+5. 🎯 [refactor/ORCHESTRATOR_CODEGEN_ALIGNMENT.md](../refactor/ORCHESTRATOR_CODEGEN_ALIGNMENT.md) - orchestrator changes
+6. 🗄️ [CONTROL_PANEL_ARCHITECTURE.md](./CONTROL_PANEL_ARCHITECTURE.md) (Section: Database) - schema
 
 ### Для Frontend Developers
 
@@ -115,6 +129,7 @@
 | Документ | Тип | Статус | Последнее обновление |
 |----------|-----|--------|----------------------|
 | **UNIFIED_ARCHITECTURE.md** | Architecture | ✅ Complete | 2025-01-14 |
+| **AGENT_INSTRUCTIONS.md** | Guide | ✅ Complete | 2025-01-20 |
 | **INTEGRATION_SUMMARY.md** | Analysis | ✅ Complete | 2025-01-14 |
 | CONTROL_PANEL_ARCHITECTURE.md | Architecture | ✅ Complete | 2024-12-XX |
 | CONTROL_PANEL_IMPLEMENTATION.md | Implementation | ✅ Complete | 2024-12-XX |

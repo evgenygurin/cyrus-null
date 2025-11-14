@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- **Comprehensive Agent Instructions**: New step-by-step guide for agents integrating Linear and Codegen
+  - Complete workflow documentation based on Linear and Codegen official documentation
+  - Linear Agent Interaction Guidelines (AIG) implementation patterns
+  - GraphQL API usage examples and TypeScript SDK integration
+  - Codegen cloud execution procedures with detailed examples
+  - Error handling and recovery strategies for common scenarios
+  - Real-world examples for bug fixes, features, and error recovery
+  - Session lifecycle management and user control patterns
+
 - **Phase 1 Refactoring Foundation**: Implemented foundational architecture for codebase modernization
   - Added error hierarchy with typed errors (ConfigError, OAuthError, GitError, SubscriptionError, ValidationError)
   - Created domain value objects (LinearToken, StripeCustomerId) with built-in validation
@@ -17,6 +26,8 @@ All notable changes to this project will be documented in this file.
   - Added comprehensive unit tests for all new components (19 new tests)
 
 ### Documentation
+- **Agent Instructions Guide**: Added comprehensive AGENT_INSTRUCTIONS.md with workflows, API patterns, and examples
+- **Documentation Index Updated**: docs/README.md now includes AGENT_INSTRUCTIONS.md in navigation
 - **Architecture and refactoring documentation**: Comprehensive analysis and planning for codebase refactoring
   - Created REFACTORING_SUMMARY.md with executive summary and metrics
   - Created REFACTORING_PLAN.md with detailed 6-phase implementation plan
