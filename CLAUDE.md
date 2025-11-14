@@ -184,6 +184,38 @@ When working on this codebase, follow these practices:
 - **Edge Worker**: `packages/edge-worker/src/EdgeWorker.ts`
 - **OAuth Flow**: `apps/proxy/src/services/OAuthService.mjs`
 
+## Integration Documentation
+
+When working with external platform integrations:
+
+### Codegen Integration
+
+For cloud-based agent execution via Codegen.com, see detailed instructions in:
+- **Documentation**: `docs/CODEGEN_AGENT_INSTRUCTIONS.md`
+- **Key Topics**: 
+  - Authentication & API setup
+  - Agent run workflow (create, monitor, retrieve results)
+  - Sandbox environment management
+  - Error handling & retry strategies
+  - Monitoring & analytics
+  - Best practices for task descriptions
+
+**When to use**: Implementing CodegenExecutor, handling agent runs, managing cloud execution
+
+### Trigger.dev Integration
+
+For background job processing and task orchestration, see detailed instructions in:
+- **Documentation**: `docs/TRIGGERDEV_AGENT_INSTRUCTIONS.md`
+- **Key Topics**:
+  - Task definition patterns
+  - Cron scheduling for recurring jobs
+  - Error handling & automatic retries
+  - Queue management & concurrency control
+  - AI agent workflow orchestration
+  - Deployment strategies
+
+**When to use**: Implementing background tasks, scheduled jobs, multi-step workflows, webhook handlers
+
 ## Testing MCP Linear Integration
 
 To test the Linear MCP (Model Context Protocol) integration in the claude-runner package:

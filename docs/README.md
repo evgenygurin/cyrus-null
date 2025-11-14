@@ -57,7 +57,21 @@
 
 Документация по интеграции облачного выполнения через Codegen.com.
 
-> **См.**: [`refactor/`](../refactor/) directory для детальной Codegen документации
+**Новые документы для агентов**:
+
+- **[CODEGEN_AGENT_INSTRUCTIONS.md](./CODEGEN_AGENT_INSTRUCTIONS.md)** ⭐ **ИНСТРУКЦИИ ДЛЯ АГЕНТОВ**
+  - Step-by-step guide для работы с Codegen API
+  - Authentication & setup
+  - Agent run workflow
+  - Error handling & best practices
+  
+- **[TRIGGERDEV_AGENT_INSTRUCTIONS.md](./TRIGGERDEV_AGENT_INSTRUCTIONS.md)** ⭐ **BACKGROUND JOBS**
+  - Task orchestration patterns
+  - Cron scheduling
+  - AI workflow orchestration
+  - Deployment strategies
+
+> **См. также**: [`refactor/`](../refactor/) directory для детальной Codegen документации
 
 **Ключевые документы в `refactor/`**:
 
@@ -78,13 +92,21 @@
 3. 🎨 [CONTROL_PANEL_UI_SPECS.md](./CONTROL_PANEL_UI_SPECS.md) - UI/UX
 4. 📊 [refactor/TEAM_BRIEFING.md](../refactor/TEAM_BRIEFING.md) - краткий брифинг
 
+### Для Claude Agents / AI Developers
+
+1. ⭐ [CODEGEN_AGENT_INSTRUCTIONS.md](./CODEGEN_AGENT_INSTRUCTIONS.md) - Codegen integration step-by-step
+2. ⭐ [TRIGGERDEV_AGENT_INSTRUCTIONS.md](./TRIGGERDEV_AGENT_INSTRUCTIONS.md) - Background jobs & task orchestration
+3. 📖 [../CLAUDE.md](../CLAUDE.md) - Main instructions for Claude Code
+4. 🏗️ [UNIFIED_ARCHITECTURE.md](./UNIFIED_ARCHITECTURE.md) - Overall system architecture
+
 ### Для Backend Developers
 
 1. ⭐ [UNIFIED_ARCHITECTURE.md](./UNIFIED_ARCHITECTURE.md) - полная картина
-2. 🔧 [refactor/CODEGEN_INTEGRATION_PLAN.md](../refactor/CODEGEN_INTEGRATION_PLAN.md) - implementation plan
-3. 📐 [refactor/CODEGEN_ARCHITECTURE_DIAGRAMS.md](../refactor/CODEGEN_ARCHITECTURE_DIAGRAMS.md) - диаграммы
-4. 🎯 [refactor/ORCHESTRATOR_CODEGEN_ALIGNMENT.md](../refactor/ORCHESTRATOR_CODEGEN_ALIGNMENT.md) - orchestrator changes
-5. 🗄️ [CONTROL_PANEL_ARCHITECTURE.md](./CONTROL_PANEL_ARCHITECTURE.md) (Section: Database) - schema
+2. 🤖 [CODEGEN_AGENT_INSTRUCTIONS.md](./CODEGEN_AGENT_INSTRUCTIONS.md) - Codegen API patterns
+3. 🔧 [refactor/CODEGEN_INTEGRATION_PLAN.md](../refactor/CODEGEN_INTEGRATION_PLAN.md) - implementation plan
+4. 📐 [refactor/CODEGEN_ARCHITECTURE_DIAGRAMS.md](../refactor/CODEGEN_ARCHITECTURE_DIAGRAMS.md) - диаграммы
+5. 🎯 [refactor/ORCHESTRATOR_CODEGEN_ALIGNMENT.md](../refactor/ORCHESTRATOR_CODEGEN_ALIGNMENT.md) - orchestrator changes
+6. 🗄️ [CONTROL_PANEL_ARCHITECTURE.md](./CONTROL_PANEL_ARCHITECTURE.md) (Section: Database) - schema
 
 ### Для Frontend Developers
 
@@ -116,6 +138,8 @@
 |----------|-----|--------|----------------------|
 | **UNIFIED_ARCHITECTURE.md** | Architecture | ✅ Complete | 2025-01-14 |
 | **INTEGRATION_SUMMARY.md** | Analysis | ✅ Complete | 2025-01-14 |
+| **CODEGEN_AGENT_INSTRUCTIONS.md** | Agent Guide | ✅ Complete | 2025-01-14 |
+| **TRIGGERDEV_AGENT_INSTRUCTIONS.md** | Agent Guide | ✅ Complete | 2025-01-14 |
 | CONTROL_PANEL_ARCHITECTURE.md | Architecture | ✅ Complete | 2024-12-XX |
 | CONTROL_PANEL_IMPLEMENTATION.md | Implementation | ✅ Complete | 2024-12-XX |
 | CONTROL_PANEL_UI_SPECS.md | UI/UX | ✅ Complete | 2024-12-XX |
