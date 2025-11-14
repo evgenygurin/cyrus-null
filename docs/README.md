@@ -8,105 +8,115 @@
 
 ### Для быстрого понимания всей системы
 
-**[UNIFIED_ARCHITECTURE.md](./UNIFIED_ARCHITECTURE.md)** ⭐ **ГЛАВНЫЙ ДОКУМЕНТ**
+**[AGENT_INSTRUCTIONS.md](./AGENT_INSTRUCTIONS.md)** ⭐ **ГЛАВНЫЙ ДОКУМЕНТ ДЛЯ AI АГЕНТОВ**
 
-- Полная архитектура: Control Panel + Codegen Integration
-- 5 архитектурных слоев
-- Integration points между всеми компонентами
-- Deployment strategy
-- Configuration management
-- Security & cost model
+- Comprehensive step-by-step guidelines for AI agents
+- Codebase overview and architecture
+- Development workflow and best practices
+- Testing and deployment procedures
+- Troubleshooting and common pitfalls
 
-**[INTEGRATION_SUMMARY.md](./INTEGRATION_SUMMARY.md)** 📋 **ОТЧЕТ ОБ ИНТЕГРАЦИИ**
+**[CODEGEN_AGENT_INSTRUCTIONS.md](./CODEGEN_AGENT_INSTRUCTIONS.md)** 🤖 **CODEGEN SPECIFIC**
 
-- Как объединены Control Panel и Codegen документация
-- Анализ противоречий (спойлер: их нет!)
-- Mapping исходных документов
-- Рекомендации по использованию документации
+- Codegen-specific instructions for AI agents
+- Platform capabilities and limitations
+- Integration with Linear and GitHub
+- Best practices for Codegen development
 
 ---
 
 ## 📚 Документация по областям
 
-### Control Panel (Next.js Web UI)
+### Codegen Integration Documentation
 
-Документация по веб-интерфейсу для управления и мониторинга Cyrus агентов.
+Документация по интеграции с платформой Codegen.com для облачного выполнения.
 
-1. **[CONTROL_PANEL_ARCHITECTURE.md](./CONTROL_PANEL_ARCHITECTURE.md)**
-   - Next.js 15 architecture
-   - PostgreSQL database schema
-   - REST API specification
-   - Server-Sent Events (SSE) для real-time updates
-   - Deployment на Vercel
+> **См.**: [`codegen/`](./codegen/) directory для детальной Codegen документации
 
-2. **[CONTROL_PANEL_IMPLEMENTATION.md](./CONTROL_PANEL_IMPLEMENTATION.md)**
-   - Implementation roadmap (6 фаз, 10-12 недель)
-   - Project structure
-   - Setup instructions
-   - Database migrations
-   - Testing strategy
+**Ключевые документы в `codegen/`**:
 
-3. **[CONTROL_PANEL_UI_SPECS.md](./CONTROL_PANEL_UI_SPECS.md)**
-   - UI/UX спецификации
-   - Component library (shadcn/ui)
-   - Page wireframes
-   - Responsive design
-   - Accessibility guidelines
+- [capabilities-sandboxes.md](./codegen/capabilities-sandboxes.md) - Sandbox capabilities and limitations
+- [settings-configuration.md](./codegen/settings-configuration.md) - Configuration management
+- [api-reference.md](./codegen/api-reference.md) - API endpoints and usage
+- [pull-requests-repositories.md](./codegen/pull-requests-repositories.md) - Repository and PR management
+- [agent-management.md](./codegen/agent-management.md) - Agent lifecycle management
+- [integrations.md](./codegen/integrations.md) - Third-party integrations overview
 
-### Codegen Integration (Cloud Executor)
+### Step-by-Step Guides
 
-Документация по интеграции облачного выполнения через Codegen.com.
+**[CODEGEN_STEP_BY_STEP_GUIDE.md](./CODEGEN_STEP_BY_STEP_GUIDE.md)**
 
-> **См.**: [`refactor/`](../refactor/) directory для детальной Codegen документации
+- Детальное руководство по работе с Codegen
+- Пошаговые инструкции для типовых задач
+- Примеры использования API
+- Best practices and patterns
+
+### Linear Integration
+
+**[LINEAR_CONFIGURATION_GUIDE.md](./LINEAR_CONFIGURATION_GUIDE.md)**
+
+- Linear workspace configuration
+- Issue routing and automation
+- Webhook setup and handling
+- Custom workflow configuration
+
+**[LINEAR_IMPLEMENTATION_CHECKLIST.md](./LINEAR_IMPLEMENTATION_CHECKLIST.md)**
+
+- Implementation checklist for Linear integration
+- Required configuration steps
+- Testing and validation procedures
+
+### Refactoring Documentation
+
+> **См.**: [`../refactor/`](../refactor/) directory для архитектурной документации
 
 **Ключевые документы в `refactor/`**:
 
 - `CODEGEN_ONLY_ARCHITECTURE.md` - упрощенная архитектура (рекомендуется)
-- `CODEGEN_INTEGRATION_PLAN.md` - детальный plan (1125+ строк)
-- `CODEGEN_ARCHITECTURE_DIAGRAMS.md` - 12 архитектурных диаграмм
+- `CODEGEN_INTEGRATION_PLAN.md` - детальный plan
+- `CODEGEN_ARCHITECTURE_DIAGRAMS.md` - архитектурные диаграммы
 - `ORCHESTRATOR_CODEGEN_ALIGNMENT.md` - orchestrator prompt updates
 - `WHY_CUSTOM_ORCHESTRATOR.md` - стратегическое обоснование
+- `TEAM_BRIEFING.md` - краткий брифинг для команды
 
 ---
 
 ## 🗺️ Навигация по документации
 
-### Для Product Managers
+### Для AI Агентов
 
-1. ⭐ [UNIFIED_ARCHITECTURE.md](./UNIFIED_ARCHITECTURE.md) - общее видение
-2. 📋 [INTEGRATION_SUMMARY.md](./INTEGRATION_SUMMARY.md) - что было объединено и почему
-3. 🎨 [CONTROL_PANEL_UI_SPECS.md](./CONTROL_PANEL_UI_SPECS.md) - UI/UX
-4. 📊 [refactor/TEAM_BRIEFING.md](../refactor/TEAM_BRIEFING.md) - краткий брифинг
+1. ⭐ [AGENT_INSTRUCTIONS.md](./AGENT_INSTRUCTIONS.md) - полное руководство
+2. 🤖 [CODEGEN_AGENT_INSTRUCTIONS.md](./CODEGEN_AGENT_INSTRUCTIONS.md) - Codegen специфика
+3. 📝 [CODEGEN_STEP_BY_STEP_GUIDE.md](./CODEGEN_STEP_BY_STEP_GUIDE.md) - пошаговые инструкции
+4. 📊 [refactor/TEAM_BRIEFING.md](../refactor/TEAM_BRIEFING.md) - архитектурный обзор
 
 ### Для Backend Developers
 
-1. ⭐ [UNIFIED_ARCHITECTURE.md](./UNIFIED_ARCHITECTURE.md) - полная картина
+1. ⭐ [AGENT_INSTRUCTIONS.md](./AGENT_INSTRUCTIONS.md) - полная картина
 2. 🔧 [refactor/CODEGEN_INTEGRATION_PLAN.md](../refactor/CODEGEN_INTEGRATION_PLAN.md) - implementation plan
 3. 📐 [refactor/CODEGEN_ARCHITECTURE_DIAGRAMS.md](../refactor/CODEGEN_ARCHITECTURE_DIAGRAMS.md) - диаграммы
 4. 🎯 [refactor/ORCHESTRATOR_CODEGEN_ALIGNMENT.md](../refactor/ORCHESTRATOR_CODEGEN_ALIGNMENT.md) - orchestrator changes
-5. 🗄️ [CONTROL_PANEL_ARCHITECTURE.md](./CONTROL_PANEL_ARCHITECTURE.md) (Section: Database) - schema
+5. 🔌 [codegen/api-reference.md](./codegen/api-reference.md) - API reference
 
 ### Для Frontend Developers
 
-1. 🎨 [CONTROL_PANEL_UI_SPECS.md](./CONTROL_PANEL_UI_SPECS.md) - UI/UX specs
-2. 🏗️ [CONTROL_PANEL_ARCHITECTURE.md](./CONTROL_PANEL_ARCHITECTURE.md) - Next.js architecture
-3. 📝 [CONTROL_PANEL_IMPLEMENTATION.md](./CONTROL_PANEL_IMPLEMENTATION.md) - implementation guide
-4. ⭐ [UNIFIED_ARCHITECTURE.md](./UNIFIED_ARCHITECTURE.md) (Section 1-2) - UI layer overview
+1. 🎨 [WEB_PANEL.md](./WEB_PANEL.md) - UI/UX specs
+2. 🏗️ [codegen/capabilities-sandboxes.md](./codegen/capabilities-sandboxes.md) - Platform capabilities
+3. 🔌 [codegen/integrations.md](./codegen/integrations.md) - Integration points
 
 ### Для DevOps Engineers
 
-1. ⭐ [UNIFIED_ARCHITECTURE.md](./UNIFIED_ARCHITECTURE.md) (Section: Deployment) - infrastructure
-2. 🚀 [CONTROL_PANEL_ARCHITECTURE.md](./CONTROL_PANEL_ARCHITECTURE.md) (Section: Deployment) - Vercel setup
-3. 📐 [refactor/CODEGEN_ARCHITECTURE_DIAGRAMS.md](../refactor/CODEGEN_ARCHITECTURE_DIAGRAMS.md) (Diagram 9) - config flow
+1. ⭐ [AGENT_INSTRUCTIONS.md](./AGENT_INSTRUCTIONS.md) (Section: Deployment) - infrastructure
+2. 📐 [refactor/CODEGEN_ARCHITECTURE_DIAGRAMS.md](../refactor/CODEGEN_ARCHITECTURE_DIAGRAMS.md) - architecture diagrams
+3. 🔧 [codegen/settings-configuration.md](./codegen/settings-configuration.md) - configuration management
 
 ### Для Архитекторов
 
-1. ⭐ [UNIFIED_ARCHITECTURE.md](./UNIFIED_ARCHITECTURE.md) - unified view
+1. ⭐ [AGENT_INSTRUCTIONS.md](./AGENT_INSTRUCTIONS.md) - comprehensive architecture overview
 2. 🧠 [refactor/WHY_CUSTOM_ORCHESTRATOR.md](../refactor/WHY_CUSTOM_ORCHESTRATOR.md) - strategic decisions
 3. 📐 [refactor/CODEGEN_ARCHITECTURE_DIAGRAMS.md](../refactor/CODEGEN_ARCHITECTURE_DIAGRAMS.md) - all diagrams
-4. 🏗️ [CONTROL_PANEL_ARCHITECTURE.md](./CONTROL_PANEL_ARCHITECTURE.md) - frontend architecture
-5. 🔧 [refactor/CODEGEN_INTEGRATION_PLAN.md](../refactor/CODEGEN_INTEGRATION_PLAN.md) - backend architecture
-6. 📋 [INTEGRATION_SUMMARY.md](./INTEGRATION_SUMMARY.md) - integration analysis
+4. 🔧 [refactor/CODEGEN_INTEGRATION_PLAN.md](../refactor/CODEGEN_INTEGRATION_PLAN.md) - integration architecture
+5. 🏗️ [refactor/CODEGEN_ONLY_ARCHITECTURE.md](../refactor/CODEGEN_ONLY_ARCHITECTURE.md) - simplified architecture
 
 ---
 
@@ -114,11 +124,12 @@
 
 | Документ | Тип | Статус | Последнее обновление |
 |----------|-----|--------|----------------------|
-| **UNIFIED_ARCHITECTURE.md** | Architecture | ✅ Complete | 2025-01-14 |
-| **INTEGRATION_SUMMARY.md** | Analysis | ✅ Complete | 2025-01-14 |
-| CONTROL_PANEL_ARCHITECTURE.md | Architecture | ✅ Complete | 2024-12-XX |
-| CONTROL_PANEL_IMPLEMENTATION.md | Implementation | ✅ Complete | 2024-12-XX |
-| CONTROL_PANEL_UI_SPECS.md | UI/UX | ✅ Complete | 2024-12-XX |
+| **AGENT_INSTRUCTIONS.md** | Main Guide | ✅ Complete | 2025-01-14 |
+| **CODEGEN_AGENT_INSTRUCTIONS.md** | Codegen Guide | ✅ Complete | 2025-01-14 |
+| **CODEGEN_STEP_BY_STEP_GUIDE.md** | Tutorial | ✅ Complete | 2025-01-14 |
+| LINEAR_CONFIGURATION_GUIDE.md | Configuration | ✅ Complete | 2024-11-03 |
+| LINEAR_IMPLEMENTATION_CHECKLIST.md | Implementation | ✅ Complete | 2024-11-03 |
+| WEB_PANEL.md | UI/UX | ✅ Complete | 2024-11-03 |
 | refactor/CODEGEN_ONLY_ARCHITECTURE.md | Architecture | ✅ Recommended | 2025-01-08 |
 | refactor/CODEGEN_INTEGRATION_PLAN.md | Implementation | ✅ Alternative | 2025-01-08 |
 | refactor/CODEGEN_ARCHITECTURE_DIAGRAMS.md | Visualization | ✅ Complete | 2025-01-08 |
@@ -171,7 +182,7 @@
 └────────────────────┘  └─────────────────────┘
 ```
 
-**Детальная схема**: См. [UNIFIED_ARCHITECTURE.md](./UNIFIED_ARCHITECTURE.md#архитектурные-слои)
+**Детальная схема**: См. [AGENT_INSTRUCTIONS.md](./AGENT_INSTRUCTIONS.md) (Architecture section)
 
 ---
 
@@ -197,7 +208,7 @@
 - [ ] Multi-tenant support
 - [ ] Enterprise features
 
-**Детальный roadmap**: См. [UNIFIED_ARCHITECTURE.md](./UNIFIED_ARCHITECTURE.md#roadmap)
+**Детальный roadmap**: См. [refactor/CODEGEN_ONLY_ARCHITECTURE.md](../refactor/CODEGEN_ONLY_ARCHITECTURE.md) (Roadmap section)
 
 ---
 
