@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 ## [Unreleased]
 
 ### Added
+- **Comprehensive Agent Instructions**: New step-by-step guide for agents integrating Linear and Codegen
+  - Complete workflow documentation based on Linear and Codegen official documentation
+  - Linear Agent Interaction Guidelines (AIG) implementation patterns
+  - GraphQL API usage examples and TypeScript SDK integration
+  - Codegen cloud execution procedures with detailed examples
+  - Error handling and recovery strategies for common scenarios
+  - Real-world examples for bug fixes, features, and error recovery
+  - Session lifecycle management and user control patterns
+
 - **Multi-Agent Platform Integration**: Expanded agent support beyond Claude Code to include Codegen and Cursor
   - Platform comparison table showing execution models, use cases, and cost structures
   - Codegen cloud-based agent integration with PR review, CI/CD checks auto-fixing, and sandbox execution
@@ -26,6 +35,9 @@ All notable changes to this project will be documented in this file.
   - Added comprehensive unit tests for all new components (19 new tests)
 
 ### Documentation
+- **Agent Instructions Guide**: Added comprehensive AGENT_INSTRUCTIONS.md with workflows, API patterns, and examples
+- **Documentation Index Updated**: docs/README.md now includes AGENT_INSTRUCTIONS.md in navigation
+
 - **Multi-Agent Platform Guide**: Comprehensive documentation for working with multiple AI agent platforms
   - Updated CLAUDE.md with detailed integration guides for Codegen and Cursor
   - Added API integration examples with code snippets for all three platforms
@@ -33,7 +45,6 @@ All notable changes to this project will be documented in this file.
   - Created .cursorrules template with project-specific conventions
   - Added sandbox configuration examples for Codegen
   - Multi-agent coordination patterns with real-world examples
-
 - **Architecture and refactoring documentation**: Comprehensive analysis and planning for codebase refactoring
   - Created REFACTORING_SUMMARY.md with executive summary and metrics
   - Created REFACTORING_PLAN.md with detailed 6-phase implementation plan
