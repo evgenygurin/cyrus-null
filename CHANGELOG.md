@@ -53,6 +53,16 @@ All notable changes to this project will be documented in this file.
   - Identified key architectural issues: God Object anti-patterns, hardcoded values, missing layer separation
   - Proposed modern architecture based on SOLID, DRY, KISS principles with GoF design patterns
   - Target improvements: Class size reduction (2067→300 lines), test coverage increase (30%→80%+), complexity reduction (25→<10)
+- **Agent Instructions**: Comprehensive guidelines for AI agents working with the codebase
+  - Created AGENT_INSTRUCTIONS.md with step-by-step instructions based on Claude Code and Codegen best practices
+  - Covers core principles: grounded responses, explicit communication, minimal output
+  - Includes code investigation workflows and tool usage guidelines
+  - Provides prompt engineering patterns and examples
+  - Documents error handling, testing, and documentation standards
+  - Details integration guidelines for Linear, Codegen, and GitHub
+  - Includes security and performance best practices
+  - Updated CLAUDE.md to reference comprehensive agent guidelines
+  - Added reference in docs/README.md for easy discovery
 
 ## [0.1.57] - 2025-10-12
 
