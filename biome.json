@@ -1,7 +1,7 @@
 {
 	"$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
 	"files": {
-		"includes": ["**", "!**/dist-electron", "!graphql/**/*.graphql"]
+		"includes": ["**", "!**/dist", "!**/dist-electron", "!graphql/**/*.graphql"]
 	},
 	"linter": {
 		"rules": {
@@ -11,7 +11,8 @@
 			"suspicious": {
 				"noExplicitAny": "off",
 				"noArrayIndexKey": "off",
-				"noUnsafeDeclarationMerging": "off"
+				"noUnsafeDeclarationMerging": "off",
+				"noUnknownAtRules": "off"
 			}
 		},
 		"domains": {
