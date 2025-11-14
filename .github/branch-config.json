@@ -1,0 +1,74 @@
+{
+	"strategy": "environment-based",
+	"branches": {
+		"main": {
+			"environment": "development",
+			"stability": "working",
+			"auto_deploy": true,
+			"merge_from": ["feature/*"],
+			"protection": {
+				"required_reviews": 1,
+				"dismiss_stale": true,
+				"require_status_checks": true,
+				"enforce_admins": false
+			}
+		},
+		"stage": {
+			"environment": "staging",
+			"stability": "tested",
+			"auto_deploy": true,
+			"merge_from": ["main", "hotfix/*"],
+			"protection": {
+				"required_reviews": 2,
+				"dismiss_stale": true,
+				"require_status_checks": true,
+				"enforce_admins": false
+			}
+		},
+		"prod": {
+			"environment": "production",
+			"stability": "stable",
+			"auto_deploy": true,
+			"merge_from": ["stage"],
+			"protection": {
+				"required_reviews": 2,
+				"dismiss_stale": true,
+				"require_status_checks": true,
+				"require_code_owner": true,
+				"enforce_admins": true
+			}
+		}
+	},
+	"workflows": {
+		"feature_development": {
+			"source": "main",
+			"target": "main",
+			"naming": "feature/*",
+			"auto_delete": true
+		},
+		"staging_promotion": {
+			"source": "main",
+			"target": "stage",
+			"requires_approval": true
+		},
+		"production_release": {
+			"source": "stage",
+			"target": "prod",
+			"requires_approval": true,
+			"create_release": true
+		},
+		"hotfix_deployment": {
+			"source": "prod",
+			"targets": ["stage", "prod"],
+			"naming": "hotfix/*",
+			"auto_merge": true,
+			"expedited_review": true
+		}
+	},
+	"automation": {
+		"sync_after_prod": true,
+		"auto_delete_merged": true,
+		"create_releases": true,
+		"notify_deployments": true
+	}
+}

@@ -25,6 +25,7 @@ Here's a refined version of your message:
 When examining or working with a package SDK:
 
 1. First, install the dependencies:
+
    ```bash
    pnpm install
    ```
@@ -48,7 +49,8 @@ cyrus/
     ├── claude-runner/# Claude CLI execution wrapper
     ├── edge-worker/  # Edge worker client implementation
     └── ndjson-client/# NDJSON streaming client
-```
+
+```bash
 
 For a detailed visual representation of how these components interact and map Claude Code sessions to Linear comment threads, see @architecture.md.
 
@@ -81,6 +83,7 @@ pnpm dev
 ### App-specific Commands
 
 #### CLI App (`apps/cli/`)
+
 ```bash
 # Start the agent
 pnpm start
@@ -101,6 +104,7 @@ pnpm link -g .               # Link local development version
 ```
 
 #### Electron App (`apps/electron/`)
+
 ```bash
 # Development mode
 pnpm dev
@@ -113,6 +117,7 @@ pnpm electron:dev
 ```
 
 #### Proxy App (`apps/proxy/`)
+
 ```bash
 # Start proxy server
 pnpm start
@@ -125,6 +130,7 @@ pnpm test
 ```
 
 ### Package Commands (all packages follow same pattern)
+
 ```bash
 # Build the package
 pnpm build
@@ -144,7 +150,7 @@ pnpm dev
 
 The agent automatically moves issues to the "started" state when assigned. Linear uses standardized state types:
 
-- **State Types Reference**: https://studio.apollographql.com/public/Linear-API/variant/current/schema/reference/enums/ProjectStatusType
+- **State Types Reference**: <https://studio.apollographql.com/public/Linear-API/variant/current/schema/reference/enums/ProjectStatusType>
 - **Standard Types**: `triage`, `backlog`, `unstarted`, `started`, `completed`, `canceled`
 - **Issue Assignment Behavior**: When an issue is assigned to the agent, it automatically transitions to a state with `type === 'started'` (In Progress)
 
@@ -152,7 +158,7 @@ The agent automatically moves issues to the "started" state when assigned. Linea
 
 1. **Edge-Proxy Architecture**: The project is transitioning to separate OAuth/webhook handling from Claude processing.
 
-2. **Dependencies**: 
+2. **Dependencies**:
    - The claude-parser package requires `jq` to be installed on the system
    - Uses pnpm as package manager (v10.11.0)
    - TypeScript for all new packages
@@ -194,6 +200,7 @@ When working on this codebase, follow these practices:
 To test the Linear MCP (Model Context Protocol) integration in the claude-runner package:
 
 1. **Setup Environment Variables**:
+
    ```bash
    cd packages/claude-runner
    # Create .env file with your Linear API token
@@ -201,16 +208,19 @@ To test the Linear MCP (Model Context Protocol) integration in the claude-runner
    ```
 
 2. **Build the Package**:
+
    ```bash
    pnpm build
    ```
 
 3. **Run the Test Script**:
+
    ```bash
    node test-scripts/simple-claude-runner-test.js
    ```
 
 The test script demonstrates:
+
 - Loading Linear API token from environment variables
 - Configuring the official Linear HTTP MCP server
 - Listing available MCP tools
@@ -218,6 +228,7 @@ The test script demonstrates:
 - Proper error handling and logging
 
 The script will show:
+
 - Whether the MCP server connects successfully
 - What Linear tools are available
 - Current user information
@@ -775,12 +786,13 @@ CIRCLECI_API_TOKEN=...
 
 ### Pre-Publishing Checklist
 
-1. **Update CHANGELOG.md**: 
+1. **Update CHANGELOG.md**:
    - Move items from `## [Unreleased]` to a new versioned section
    - Use the CLI version number (e.g., `## [0.1.22] - 2025-01-06`)
    - Focus on end-user impact from the perspective of the `cyrus` CLI
 
 2. **Commit all changes**:
+
    ```bash
    git add -A
    git commit -m "Prepare release v0.1.XX"
@@ -790,11 +802,13 @@ CIRCLECI_API_TOKEN=...
 ### Publishing Workflow
 
 1. **Install dependencies from root**:
+
    ```bash
    pnpm install  # Ensures all workspace dependencies are up to date
    ```
 
 2. **Build all packages from root first**:
+
    ```bash
    pnpm build  # Builds all packages to ensure dependencies are resolved
    ```
@@ -831,6 +845,7 @@ CIRCLECI_API_TOKEN=...
    ```
 
 4. **Finally publish the CLI**:
+
    ```bash
    pnpm install  # Final install to ensure all deps are latest
    cd apps/cli && pnpm publish --access public --no-git-checks
@@ -838,6 +853,7 @@ CIRCLECI_API_TOKEN=...
    ```
 
 5. **Create git tag and push**:
+
    ```bash
    git tag v0.1.XX
    git push origin <branch-name>
@@ -845,9 +861,170 @@ CIRCLECI_API_TOKEN=...
    ```
 
 **Key Notes:**
+
 - Always use `--no-git-checks` flag to publish from feature branches
 - Run `pnpm install` after each publish to update the lockfile
 - The `simple-agent-runner` package MUST be published before `edge-worker`
 - Build all packages once at the start, then publish without rebuilding
 - This ensures `workspace:*` references resolve to published versions
 
+---
+
+## Codegen Platform Integration
+
+### Overview
+
+**Codegen** is an enterprise-grade platform for deploying AI code agents at scale. For comprehensive documentation, see [@docs/CODEGEN_AGENT_INSTRUCTIONS.md](docs/CODEGEN_AGENT_INSTRUCTIONS.md).
+
+**Quick Start**:
+
+```bash
+# Install Codegen CLI
+uv tool install codegen
+
+# Authenticate
+codegen login
+
+# Run Claude Code with Codegen monitoring
+codegen claude "your prompt here"
+```
+
+### Key Integration Points
+
+#### 1. Linear Integration via Codegen
+
+Codegen can monitor and process Linear issues similar to Cyrus:
+
+```bash
+# In Linear issue, assign to Codegen or mention
+@codegen implement this feature following our architecture
+```
+
+**Benefits over Cyrus**:
+
+- ✅ Enterprise-grade infrastructure (SOC 2 certified)
+- ✅ Team visibility and analytics
+- ✅ Multi-agent systems (parent/child agents)
+- ✅ Automatic PR reviews
+- ✅ Broader integrations (Slack, Jira, GitHub, etc.)
+
+**Cyrus Advantages**:
+
+- ✅ Lightweight, self-hosted
+- ✅ Full control over execution
+- ✅ Custom Linear workflow logic
+- ✅ Direct Claude Code integration
+- ✅ Git worktree isolation
+
+#### 2. Using Codegen API for Automated Workflows
+
+```typescript
+// Example: Trigger Codegen agent from Cyrus for complex tasks
+import { Agent } from 'codegen';
+
+const agent = new Agent({
+  org_id: process.env.CODEGEN_ORG_ID,
+  token: process.env.CODEGEN_API_TOKEN
+});
+
+// Delegate complex multi-repo tasks to Codegen
+const run = await agent.run({
+  prompt: `
+    Implement cross-service authentication:
+    1. Update auth-service with JWT generation
+    2. Update api-gateway with JWT validation
+    3. Update user-service to verify tokens
+    4. Add comprehensive tests to all services
+  `,
+  repo_id: 456,
+  metadata: {
+    source: 'cyrus',
+    linear_issue: issueId
+  }
+});
+```
+
+#### 3. Complementary Use Cases
+
+**Use Cyrus for**:
+
+- Single-repository Linear workflows
+- Custom Linear state management
+- Tight Claude Code integration
+- Development-specific Linear automations
+
+**Use Codegen for**:
+
+- Enterprise deployment at scale
+- Multi-repository coordination
+- Team collaboration features
+- Advanced observability and analytics
+- Automatic PR reviews
+- Integration with multiple platforms (Slack, Jira, etc.)
+
+### Setup Commands for Cyrus in Codegen
+
+If using Codegen to manage Cyrus repository:
+
+```bash
+# .codegen/setup-commands.txt
+
+# Install pnpm
+npm install -g pnpm@10.11.0
+
+# Install dependencies
+pnpm install
+
+# Build all packages
+pnpm build
+
+# Install jq (required for claude-parser)
+apt-get update && apt-get install -y jq
+
+# Verify setup
+pnpm typecheck
+pnpm test:packages:run
+```
+
+### Prompting Patterns for Cyrus Development
+
+When using Codegen agents to work on Cyrus:
+
+```bash
+# Good prompt example
+Repository: cyrus-null
+Branch: feature/add-slack-integration
+
+Goal: Add Slack notification support to Cyrus agent
+
+Tasks:
+1. Create SlackNotificationService in packages/core/src/services/
+2. Integrate with Linear webhook events
+3. Send notifications when:
+   - Issue assigned to agent
+   - Agent starts processing
+   - Agent completes work
+   - PR created or updated
+4. Add configuration for Slack webhook URL
+5. Write comprehensive tests (90%+ coverage)
+6. Update CHANGELOG.md under [Unreleased]
+
+Context:
+- Follow pattern in LinearIssueService (apps/cli/services/LinearIssueService.mjs)
+- Use TypeScript for new services
+- Maintain monorepo structure (packages vs apps)
+
+Success Criteria:
+- All existing tests pass
+- New tests with 90%+ coverage
+- TypeScript compilation succeeds
+- CHANGELOG updated with user-facing changes
+```
+
+### Resources
+
+- **Full Documentation**: [@docs/CODEGEN_AGENT_INSTRUCTIONS.md](docs/CODEGEN_AGENT_INSTRUCTIONS.md)
+- **Codegen Platform**: <https://codegen.com>
+- **API Documentation**: <https://docs.codegen.com>
+- **Linear Integration**: <https://docs.codegen.com/integrations/linear.md>
+- **Claude Code Integration**: <https://docs.codegen.com/capabilities/claude-code.md>
