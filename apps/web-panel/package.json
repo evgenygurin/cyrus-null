@@ -2,12 +2,13 @@
 	"name": "@cyrus/web-panel",
 	"version": "0.1.0",
 	"private": true,
-	"packageManager": "pnpm@10.11.0",
+	"packageManager": "pnpm@10.13.1",
 	"scripts": {
 		"dev": "next dev -p 3001",
 		"build": "next build",
 		"start": "next start -p 3001",
-		"lint": "next lint",
+		"lint": "cd ../.. && pnpm biome check apps/web-panel",
+		"lint:fix": "cd ../.. && pnpm biome check --write apps/web-panel",
 		"typecheck": "tsc --noEmit"
 	},
 	"dependencies": {

@@ -13,7 +13,15 @@ const nextConfig = {
 		PREVIEW_URL:
 			process.env.CG_PREVIEW_URL ||
 			process.env.VERCEL_URL ||
-			"http://localhost:3000",
+			"http://localhost:3001",
+	},
+
+	// Output configuration for Vercel
+	output: "standalone",
+
+	// Compiler options
+	compiler: {
+		removeConsole: process.env.NODE_ENV === "production",
 	},
 };
 
