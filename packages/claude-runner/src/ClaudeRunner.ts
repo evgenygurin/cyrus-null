@@ -1,7 +1,6 @@
 import { EventEmitter } from "node:events";
 import {
 	createWriteStream,
-	existsSync,
 	mkdirSync,
 	readFileSync,
 	type WriteStream,
@@ -317,21 +316,23 @@ export class ClaudeRunner extends EventEmitter {
 			// Auto-detect .mcp.json in working directory (base config)
 			if (this.config.workingDirectory) {
 				const autoMcpPath = join(this.config.workingDirectory, ".mcp.json");
-				if (existsSync(autoMcpPath)) {
-					try {
-						// Validate it's readable JSON before adding to paths
-						const testContent = readFileSync(autoMcpPath, "utf8");
-						JSON.parse(testContent);
-						configPaths.push(autoMcpPath);
-						console.log(
-							`[ClaudeRunner] Auto-detected MCP config at ${autoMcpPath}`,
-						);
-					} catch (_error) {
-						// Silently skip invalid .mcp.json files (could be test fixtures, etc.)
+				try {
+					// Validate it's readable JSON before adding to paths
+					// No existsSync check to avoid race condition (TOCTOU)
+					const testContent = readFileSync(autoMcpPath, "utf8");
+					JSON.parse(testContent);
+					configPaths.push(autoMcpPath);
+					console.log(
+						`[ClaudeRunner] Auto-detected MCP config at ${autoMcpPath}`,
+					);
+				} catch (error) {
+					// Silently skip missing or invalid .mcp.json files (could be test fixtures, etc.)
+					if ((error as NodeJS.ErrnoException).code !== "ENOENT") {
 						console.log(
 							`[ClaudeRunner] Skipping invalid .mcp.json at ${autoMcpPath}`,
 						);
 					}
+					// Silently ignore ENOENT - it just means no .mcp.json file exists
 				}
 			}
 
@@ -673,21 +674,25 @@ export class ClaudeRunner extends EventEmitter {
 		try {
 			const envPath = join(workingDirectory, ".env");
 
-			if (existsSync(envPath)) {
-				// Load but don't override existing env vars
-				const result = dotenv.config({
-					path: envPath,
-					override: false, // Existing process.env takes precedence
-				});
+			// dotenv.config() already handles file existence internally and returns
+			// { error } if file doesn't exist. No need for existsSync check which
+			// creates a race condition (TOCTOU - Time of Check, Time of Use)
+			const result = dotenv.config({
+				path: envPath,
+				override: false, // Existing process.env takes precedence
+			});
 
-				if (result.error) {
+			if (result.error) {
+				// Only warn if it's not a simple "file not found" error
+				if ((result.error as NodeJS.ErrnoException).code !== "ENOENT") {
 					console.warn(
 						`[ClaudeRunner] Failed to parse .env file:`,
 						result.error,
 					);
-				} else if (result.parsed && Object.keys(result.parsed).length > 0) {
-					console.log(`[ClaudeRunner] Loaded environment variables from .env`);
 				}
+				// Silently ignore ENOENT - it just means no .env file exists
+			} else if (result.parsed && Object.keys(result.parsed).length > 0) {
+				console.log(`[ClaudeRunner] Loaded environment variables from .env`);
 			}
 		} catch (error) {
 			console.warn(`[ClaudeRunner] Error loading repository .env:`, error);

@@ -2,8 +2,20 @@
 	"extends": "../../tsconfig.base.json",
 	"compilerOptions": {
 		"outDir": "./dist",
-		"module": "NodeNext",
-		"moduleResolution": "NodeNext"
+		"baseUrl": ".",
+		"paths": {
+			"cyrus-core": ["../../packages/core/dist"],
+			"cyrus-claude-parser": ["../../packages/claude-parser/dist"],
+			"cyrus-linear-client": ["../../packages/linear-client/dist"],
+			"cyrus-linear-webhook-client": [
+				"../../packages/linear-webhook-client/dist"
+			],
+			"cyrus-history-stream": ["../../packages/history-stream/dist"],
+			"cyrus-edge-worker": ["../../packages/edge-worker/dist"],
+			"cyrus-claude-runner": ["../../packages/claude-runner/dist"],
+			"cyrus-ndjson-client": ["../../packages/ndjson-client/dist"],
+			"cyrus-simple-agent-runner": ["../../packages/simple-agent-runner/dist"]
+		}
 	},
 	"include": ["*.ts"],
 	"exclude": ["node_modules", "dist", "**/*.test.ts"]
