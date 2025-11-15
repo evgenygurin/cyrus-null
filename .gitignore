@@ -25,8 +25,11 @@ pids
 # Test coverage
 coverage/
 
-# Build outputs for apps (not packages)
-apps/**/dist/
+# Build outputs
+dist/
+**/dist/
+*.map
+**/*.map
 apps/**/.next/
 apps/**/out/
 
