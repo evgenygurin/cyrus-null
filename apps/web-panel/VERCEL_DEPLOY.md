@@ -29,9 +29,13 @@ When importing, configure the following:
 - This tells Vercel where to find the Next.js application
 
 **Build & Development Settings:**
-- Build Command: `pnpm build` (auto-detected)
+- Build Command: `cd ../.. && pnpm install && cd apps/web-panel && pnpm build`
 - Output Directory: `.next` (auto-detected)
-- Install Command: `pnpm install` (auto-detected)
+- Install Command: `cd ../.. && pnpm install`
+- Node.js Version: `20.x` (recommended)
+
+**IMPORTANT for Monorepo:**
+The build and install commands need to navigate to the root directory to install all workspace dependencies before building the web-panel. This ensures all internal package dependencies are available.
 
 ### Step 3: Configure Environment Variables
 
@@ -200,12 +204,13 @@ If you want to connect to a real Cyrus CLI instance:
 ### Build Fails
 
 **Issue**: `pnpm: command not found`
-**Solution**: Vercel should auto-detect pnpm. If not, add to `package.json`:
+**Solution**: Vercel should auto-detect pnpm from the `packageManager` field in `package.json`. Ensure both root and web-panel `package.json` files have:
 ```json
 {
-  "packageManager": "pnpm@10.11.0"
+  "packageManager": "pnpm@10.13.1"
 }
 ```
+The versions must match between root and apps/web-panel to avoid dependency resolution issues.
 
 **Issue**: Module not found errors
 **Solution**: Ensure all dependencies are in `package.json` and run `pnpm install` locally first

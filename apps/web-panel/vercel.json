@@ -1,8 +1,8 @@
 {
 	"$schema": "https://openapi.vercel.sh/vercel.json",
-	"buildCommand": "pnpm build",
+	"buildCommand": "cd ../.. && pnpm install && cd apps/web-panel && pnpm build",
 	"devCommand": "pnpm dev",
-	"installCommand": "pnpm install",
+	"installCommand": "cd ../.. && pnpm install",
 	"framework": "nextjs",
 	"outputDirectory": ".next",
 	"git": {
@@ -27,6 +27,10 @@
 				{
 					"key": "X-Content-Type-Options",
 					"value": "nosniff"
+				},
+				{
+					"key": "Referrer-Policy",
+					"value": "strict-origin-when-cross-origin"
 				}
 			]
 		}
