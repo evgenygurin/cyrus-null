@@ -14,11 +14,49 @@ We use GitHub to host code, to track issues and feature requests, as well as acc
 
 ### Pull Requests
 
+Pull requests are the primary way to contribute code changes to the project.
+
+#### Quick Start
+
 1. Fork the repo and create your branch from `main`
-2. If you've added code that should be tested, add tests
-3. Ensure the test suite passes
-4. Make sure your code follows the project style guidelines
-5. Issue a pull request
+2. Make your changes following the code style guidelines
+3. Add tests for any new functionality
+4. Ensure all checks pass: `pnpm build && pnpm typecheck && pnpm test:packages:run`
+5. Update CHANGELOG.md under `[Unreleased]` section
+6. Create a pull request using the appropriate template
+
+#### PR Templates
+
+We provide specialized templates for different types of pull requests:
+
+- **Default Template** - For most changes (features, bug fixes, documentation)
+- **Hotfix Template** - For critical production issues requiring immediate fixes
+- **Release Template** - For promoting code between environments (main→stage→prod)
+
+See [.github/PULL_REQUEST_TEMPLATE/README.md](.github/PULL_REQUEST_TEMPLATE/README.md) for detailed guidance on which template to use.
+
+#### Before Submitting
+
+Run these commands to ensure your PR is ready:
+
+```bash
+pnpm build                # Build all packages
+pnpm typecheck           # TypeScript type checking
+pnpm test:packages:run   # Run all package tests
+pnpm lint                # Check code style
+```
+
+#### PR Review Process
+
+1. All PRs require at least one approval from a maintainer
+2. All CI checks must pass
+3. CHANGELOG.md must be updated
+4. Documentation must be updated for user-facing changes
+5. Breaking changes require migration guides
+
+For detailed guidelines, see:
+- [PR Guidelines](.github/PR_GUIDELINES.md) - Comprehensive instructions
+- [PR Checklist](.github/PR_CHECKLIST.md) - Quick reference guide
 
 ### Issues
 
@@ -45,10 +83,32 @@ We use GitHub issues to track work. Here's how to do that effectively:
 
 ## Testing
 
-Please make sure to write and run tests for any new code. We use Jest for testing.
+Please make sure to write and run tests for any new code. We use Vitest for testing.
 
-- Run all tests: `npm test`
-- Run specific tests: `npm test -- path/to/test.mjs`
+```bash
+# Run all tests in watch mode
+pnpm test
+
+# Run all package tests once (recommended for CI/PR validation)
+pnpm test:packages:run
+
+# Run tests for a specific package
+pnpm --filter '@cyrus/core' test:run
+
+# Run tests in watch mode for development
+pnpm --filter '@cyrus/core' test
+
+# Run tests for all apps
+pnpm test:apps
+```
+
+### Test Requirements
+
+- All new features must include unit tests
+- Bug fixes should include regression tests
+- Integration tests for cross-package functionality
+- Maintain or improve test coverage
+- Tests must pass before PR can be merged
 
 ## Code Style
 
